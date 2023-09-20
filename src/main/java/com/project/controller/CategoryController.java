@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,5 +35,10 @@ public class CategoryController {
     public ResponseEntity<Category> deleteCategory(@PathVariable("id") int id) {
         categoryService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") int id, @RequestBody Map<String, String> objectMap) {
+        return ResponseEntity.ok(categoryService.update(objectMap, id));
     }
 }

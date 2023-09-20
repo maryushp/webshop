@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/item")
@@ -34,5 +35,10 @@ public class ItemController {
     public ResponseEntity<Item> deleteItem(@PathVariable("id") int id) {
         itemService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Item> updateCategory(@PathVariable("id") int id, @RequestBody Map<String, String> objectMap) {
+        return ResponseEntity.ok(itemService.update(objectMap, id));
     }
 }
