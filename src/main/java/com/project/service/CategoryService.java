@@ -40,6 +40,7 @@ public class CategoryService implements CrudService<Category>{
 
     @Override
     public void delete(int id) {
-
+        if (categoryRepository.delete(id))
+            throw new RuntimeException();
     }
 }
