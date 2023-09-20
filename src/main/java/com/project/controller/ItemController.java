@@ -29,4 +29,10 @@ public class ItemController {
     public ResponseEntity<Item> createItem(@RequestBody Item item) {
         return new ResponseEntity<>(itemService.create(item), HttpStatus.CREATED);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Item> deleteItem(@PathVariable("id") int id) {
+        itemService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

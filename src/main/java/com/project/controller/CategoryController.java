@@ -29,4 +29,10 @@ public class CategoryController {
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         return new ResponseEntity<>(categoryService.create(category), HttpStatus.CREATED);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Category> deleteCategory(@PathVariable("id") int id) {
+        categoryService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
