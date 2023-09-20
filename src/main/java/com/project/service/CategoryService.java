@@ -2,12 +2,11 @@ package com.project.service;
 
 import com.project.model.Category;
 import com.project.repository.CategoryRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +19,18 @@ public class CategoryService implements CrudService<Category>{
     }
 
     @Override
-    public Optional<Category> get(int id) {
-        return Optional.empty();
+    public Category get(int id) {
+            return categoryRepository.selectById(id).orElseThrow(RuntimeException::new);
     }
 
     @Override
+    @Transactional
     public Category create(Category category) {
-        return null;
+        if(categoryRepository.insert(category)){
+            return categoryRepository.selectById(categoryRepository.getId(category).orElseThrow(RuntimeException::new)).orElseThrow(RuntimeException::new);
+        }else {
+            throw new RuntimeException();
+        }
     }
 
     @Override

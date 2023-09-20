@@ -2,9 +2,9 @@ package com.project.service;
 
 import com.project.model.Item;
 import com.project.repository.ItemRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +22,25 @@ public class ItemService implements CrudService<Item>{
     }
 
     @Override
-    public Optional<Item> get(int id) {
-        return Optional.empty();
+    public Item get(int id) {
+        Optional<Item> opItem = itemRepository.selectById(id);
+        if(opItem.isPresent()){
+            Item item = opItem.get();
+            item.setCategories(itemRepository.selectDependenciesById(opItem.get().getId()));
+            return item;
+        }else {
+            throw new RuntimeException();
+        }
     }
 
     @Override
+    @Transactional
     public Item create(Item item) {
-        return null;
+        if(itemRepository.insert(item)){
+            return itemRepository.selectById(itemRepository.getId(item).orElseThrow(RuntimeException::new)).orElseThrow(RuntimeException::new);
+        }else {
+            throw new RuntimeException();
+        }
     }
 
     @Override
