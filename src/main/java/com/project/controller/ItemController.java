@@ -3,10 +3,9 @@ package com.project.controller;
 import com.project.model.Item;
 import com.project.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +18,15 @@ public class ItemController {
     @GetMapping
     public ResponseEntity<List<Item>> getAll(){
         return ResponseEntity.ok(itemService.getAll());
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Item> getById(@PathVariable("id") int id) {
+        return ResponseEntity.ok(itemService.get(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<Item> createItem(@RequestBody Item item) {
+        return new ResponseEntity<>(itemService.create(item), HttpStatus.CREATED);
     }
 }
