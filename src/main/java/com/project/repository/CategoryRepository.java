@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -38,8 +39,9 @@ public class CategoryRepository implements CrudRepository<Category, Item>{
     }
 
     @Override
-    public Category update(Category category, int id) {
-        return null;
+    public Optional<Category> update(Map<String, String> objectMap, int id) {
+        jdbcTemplate.update(AppQuery.Category.UPDATE_CATEGORY_BY_ID,objectMap.get("name"), id);
+        return selectById(id);
     }
 
     @Override

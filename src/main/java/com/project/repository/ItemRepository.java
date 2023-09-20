@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -38,8 +40,19 @@ public class ItemRepository implements CrudRepository<Item, Category>{
     }
 
     @Override
-    public Item update(Item item, int id) {
-        return null;
+    public Optional<Item> update(Map<String, String> objectMap, int id) {
+        List<String> values = new ArrayList<>();
+        StringBuilder query = new StringBuilder(AppQuery.Item.UPDATE_ITEM_BY_ID);
+
+        objectMap.forEach((key, value) ->
+        {       query.append(" ").append(key).append(" = ?, ");
+                values.add(value);
+        });
+        query.setLength(query.length() - 2);
+        query.append(" WHERE id = ?");
+        values.add(String.valueOf(id));
+        jdbcTemplate.update(query.toString(), values.toArray());
+        return selectById(id);
     }
 
     @Override
