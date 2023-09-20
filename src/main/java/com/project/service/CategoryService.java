@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +35,8 @@ public class CategoryService implements CrudService<Category>{
     }
 
     @Override
-    public Category update(Category category, int id) {
-        return null;
+    public Category update(Map<String, String> objectMap, int id) {
+        return categoryRepository.update(objectMap, id).orElseThrow(RuntimeException::new);
     }
 
     @Override

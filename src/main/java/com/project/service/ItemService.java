@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -44,8 +45,8 @@ public class ItemService implements CrudService<Item>{
     }
 
     @Override
-    public Item update(Item item, int id) {
-        return null;
+    public Item update(Map<String, String> objectMap, int id) {
+        return itemRepository.update(objectMap, id).orElseThrow(RuntimeException::new);
     }
 
     @Override
