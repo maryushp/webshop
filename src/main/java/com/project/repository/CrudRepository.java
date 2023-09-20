@@ -9,7 +9,7 @@ public interface CrudRepository<T, E>{
     Optional<T> selectById(int id);
     boolean insert(T t);
     T update(T t, int id);
-    void delete(int id);
+    boolean delete(int id);
     Optional<Integer> getId(T t);
 
 }

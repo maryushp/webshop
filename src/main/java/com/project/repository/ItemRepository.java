@@ -43,8 +43,8 @@ public class ItemRepository implements CrudRepository<Item, Category>{
     }
 
     @Override
-    public void delete(int id) {
-
+    public boolean delete(int id) {
+        return jdbcTemplate.update(AppQuery.Item.DELETE_ITEM_BY_ID, id) == 1;
     }
 
     @Override
