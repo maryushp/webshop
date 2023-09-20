@@ -17,9 +17,7 @@ public class ItemRepository implements CrudRepository<Item, Category>{
 
     @Override
     public List<Item> selectAll() {
-        List<Item> items = jdbcTemplate.query(AppQuery.Item.SELECT_ALL_ITEMS, new BeanPropertyRowMapper<>(Item.class));
-        items.forEach(item -> item.setCategories(selectDependenciesById(item.getId())));
-        return items;
+        return jdbcTemplate.query(AppQuery.Item.SELECT_ALL_ITEMS, new BeanPropertyRowMapper<>(Item.class));
     }
 
     @Override
