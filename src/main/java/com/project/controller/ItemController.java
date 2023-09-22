@@ -38,7 +38,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Item> updateCategory(@PathVariable("id") int id, @RequestBody Map<String, String> objectMap) {
-        return ResponseEntity.ok(itemService.update(objectMap, id));
+    public ResponseEntity<Item> updateCategory(@PathVariable("id") int id, @RequestBody Item item) {
+        return ResponseEntity.ok(itemService.update(item, id));
     }
 }

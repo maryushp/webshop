@@ -14,6 +14,7 @@ public class AppQuery {
         public static final String DELETE_ITEM_BY_ID = "DELETE FROM item WHERE id = ?";
         public static final String UPDATE_ITEM_BY_ID = "UPDATE item SET";
         public static final String IS_ITEM_EXISTS = "SELECT COUNT(*) FROM item WHERE name = ? AND price = ? AND description = ?";
+        public static final String DELETE_DEPENDENCY_BY_ITEM_ID = "DELETE FROM item_has_category WHERE item_id = ?";
     }
 
     @UtilityClass

@@ -38,7 +38,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") int id, @RequestBody Map<String, String> objectMap) {
-        return ResponseEntity.ok(categoryService.update(objectMap, id));
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") int id, @RequestBody Category category) {
+        return ResponseEntity.ok(categoryService.update(category, id));
     }
 }

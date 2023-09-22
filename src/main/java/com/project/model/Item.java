@@ -14,7 +14,7 @@ import java.util.List;
 public class Item {
     private int id;
     private String name;
-    private double price;
+    private Double price;
     private String description;
     private String creationDate;
     private List<Category> categories;

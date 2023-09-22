@@ -70,7 +70,11 @@ public class ItemRepository implements CrudRepository<Item, Category>{
         return jdbcTemplate.queryForObject(AppQuery.Item.IS_ITEM_EXISTS, Integer.class, item.getName(), item.getPrice(), item.getDescription()) == 1;
     }
 
-    public void addCategory(int itemId, int categoryId) {
+    public void addCategoryToItem(int itemId, int categoryId) {
         jdbcTemplate.update(AppQuery.ItemCategoryDependency.ADD_CATEGORY_TO_ITEM, itemId, categoryId);
+    }
+
+    public void deleteItemDependenciesById(int id) {
+        jdbcTemplate.update(AppQuery.Item.DELETE_DEPENDENCY_BY_ITEM_ID, id);
     }
 }

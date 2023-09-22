@@ -7,6 +7,6 @@ public interface CrudService<T> {
     List<T> getAll();
     T get(int id);
     T create(T t);
-    T update(Map<String, String> objectMap, int id);
+    T update(T t, int id);
     void delete(int id);
 }

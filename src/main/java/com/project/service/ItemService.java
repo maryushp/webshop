@@ -3,6 +3,7 @@ package com.project.service;
 import com.project.model.Item;
 import com.project.repository.CategoryRepository;
 import com.project.repository.ItemRepository;
+import com.project.utils.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,16 +47,26 @@ public class ItemService implements CrudService<Item>{
             throw new RuntimeException();
         }
         item.getCategories().forEach(category -> {
-            if (categoryRepository.isExists(category)) {
-                itemRepository.addCategory(it.getId(), categoryRepository.getId(category).orElseThrow(RuntimeException::new));
-            }
+            if (categoryRepository.isExists(category))
+                itemRepository.addCategoryToItem(it.getId(), categoryRepository.getId(category).orElseThrow(RuntimeException::new));
         });
-        return get(it.getId());
+        it.setCategories(itemRepository.selectDependenciesById(it.getId()));
+        return it;
     }
 
     @Override
-    public Item update(Map<String, String> objectMap, int id) {
-        return itemRepository.update(objectMap, id).orElseThrow(RuntimeException::new);
+    public Item update(Item item, int id) {
+        Map<String, String> objectMap = Validation.itemToMap(item);
+        if(!objectMap.isEmpty())
+            itemRepository.update(objectMap, id);
+        if(item.getCategories() != null) {
+            itemRepository.deleteItemDependenciesById(id);
+            item.getCategories().forEach(category -> {
+                if (categoryRepository.isExists(category))
+                    itemRepository.addCategoryToItem(id, categoryRepository.getId(category).orElseThrow(RuntimeException::new));
+            });
+        }
+        return get(id);
     }
 
     @Override

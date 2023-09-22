@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,9 @@ public class CategoryService implements CrudService<Category>{
     }
 
     @Override
-    public Category update(Map<String, String> objectMap, int id) {
+    public Category update(Category category, int id) {
+        Map<String, String> objectMap = new HashMap<>();
+        objectMap.put("name", category.getName());
         return categoryRepository.update(objectMap, id).orElseThrow(RuntimeException::new);
     }
 
