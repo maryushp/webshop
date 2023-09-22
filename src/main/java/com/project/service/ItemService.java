@@ -60,7 +60,7 @@ public class ItemService implements CrudService<Item>{
 
     @Override
     public void delete(int id) {
-        if (itemRepository.delete(id))
+        if (!itemRepository.delete(id))
             throw new RuntimeException();
     }
 }
