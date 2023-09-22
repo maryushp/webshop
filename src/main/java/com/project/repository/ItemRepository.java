@@ -65,6 +65,11 @@ public class ItemRepository implements CrudRepository<Item, Category>{
         return Optional.ofNullable(jdbcTemplate.queryForObject(AppQuery.Item.SELECT_ITEM_ID, Integer.class, item.getName(), item.getPrice(), item.getDescription()));
     }
 
+    @Override
+    public boolean isExists(Item item) {
+        return jdbcTemplate.queryForObject(AppQuery.Item.IS_ITEM_EXISTS, Integer.class, item.getName(), item.getPrice(), item.getDescription()) == 1;
+    }
+
     public void addCategory(int itemId, int categoryId) {
         jdbcTemplate.update(AppQuery.ItemCategoryDependency.ADD_CATEGORY_TO_ITEM, itemId, categoryId);
     }

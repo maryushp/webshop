@@ -54,7 +54,8 @@ public class CategoryRepository implements CrudRepository<Category, Item>{
         return Optional.ofNullable(jdbcTemplate.queryForObject(AppQuery.Category.SELECT_CATEGORY_ID, Integer.class, category.getName()));
     }
 
-    public boolean isCategoryExists(Category category) {
-        return jdbcTemplate.queryForObject(AppQuery.Category.IS_CATEGORY_EXIST, Integer.class, category.getName()) == 1;
+    @Override
+    public boolean isExists(Category category) {
+        return jdbcTemplate.queryForObject(AppQuery.Category.IS_CATEGORY_EXISTS, Integer.class, category.getName()) == 1;
     }
 }

@@ -12,5 +12,6 @@ public interface CrudRepository<T, E>{
     Optional<T> update(Map<String, String> objectMap, int id);
     boolean delete(int id);
     Optional<Integer> getId(T t);
+    boolean isExists (T t);
 
 }

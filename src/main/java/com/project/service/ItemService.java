@@ -46,7 +46,7 @@ public class ItemService implements CrudService<Item>{
             throw new RuntimeException();
         }
         item.getCategories().forEach(category -> {
-            if (categoryRepository.isCategoryExists(category)) {
+            if (categoryRepository.isExists(category)) {
                 itemRepository.addCategory(it.getId(), categoryRepository.getId(category).orElseThrow(RuntimeException::new));
             }
         });
