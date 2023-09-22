@@ -23,5 +23,11 @@ public class AppQuery {
         public static final String SELECT_CATEGORY_ID = "SELECT id FROM category WHERE name = ?";
         public static final String DELETE_CATEGORY_BY_ID = "DELETE FROM category WHERE id = ?";
         public static final String UPDATE_CATEGORY_BY_ID = "UPDATE category SET name = ? WHERE id = ?";
+        public static final String IS_CATEGORY_EXIST =  "SELECT COUNT(*) FROM category WHERE name = ?";
+    }
+
+    @UtilityClass
+    public static class ItemCategoryDependency{
+        public static final String ADD_CATEGORY_TO_ITEM = "INSERT INTO item_has_category (item_id, category_id) VALUES (?, ?)";
     }
 }
