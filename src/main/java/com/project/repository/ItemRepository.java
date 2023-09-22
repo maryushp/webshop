@@ -64,4 +64,8 @@ public class ItemRepository implements CrudRepository<Item, Category>{
     public Optional<Integer> getId(Item item) {
         return Optional.ofNullable(jdbcTemplate.queryForObject(AppQuery.Item.SELECT_ITEM_ID, Integer.class, item.getName(), item.getPrice(), item.getDescription()));
     }
+
+    public void addCategory(int itemId, int categoryId) {
+        jdbcTemplate.update(AppQuery.ItemCategoryDependency.ADD_CATEGORY_TO_ITEM, itemId, categoryId);
+    }
 }

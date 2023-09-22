@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.model.Item;
+import com.project.repository.CategoryRepository;
 import com.project.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemService implements CrudService<Item>{
     private final ItemRepository itemRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public List<Item> getAll() {
@@ -37,11 +39,18 @@ public class ItemService implements CrudService<Item>{
     @Override
     @Transactional
     public Item create(Item item) {
+        Item it;
         if(itemRepository.insert(item)){
-            return itemRepository.selectById(itemRepository.getId(item).orElseThrow(RuntimeException::new)).orElseThrow(RuntimeException::new);
+            it = itemRepository.selectById(itemRepository.getId(item).orElseThrow(RuntimeException::new)).orElseThrow(RuntimeException::new);
         }else {
             throw new RuntimeException();
         }
+        item.getCategories().forEach(category -> {
+            if (categoryRepository.isCategoryExists(category)) {
+                itemRepository.addCategory(it.getId(), categoryRepository.getId(category).orElseThrow(RuntimeException::new));
+            }
+        });
+        return get(it.getId());
     }
 
     @Override
