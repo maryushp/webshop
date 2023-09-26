@@ -1,5 +1,6 @@
 package com.project.exceptionhandler.handler;
 
+import com.project.exceptionhandler.exceptions.InvalidElementException;
 import com.project.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import org.springframework.core.annotation.Order;
@@ -24,5 +25,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(SuchElementAlreadyExists.class)
     public ResponseEntity<Object> handleSuchElementAlreadyExists(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(InvalidElementException.class)
+    public ResponseEntity<Object> handleInvalidElementException(RuntimeException ex, WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }
