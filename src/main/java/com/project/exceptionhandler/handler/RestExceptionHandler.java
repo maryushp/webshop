@@ -1,6 +1,6 @@
 package com.project.exceptionhandler.handler;
 
-import com.project.exceptionhandler.exceptions.NoSuchElementException;
+import com.project.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +16,7 @@ import org.springframework.core.Ordered;
 @ControllerAdvice()
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(NoSuchElementException.class)
+    @ExceptionHandler(NoSuchElemException.class)
     public ResponseEntity<Object> handleNoSuchElementException(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NO_CONTENT, request);
     }
