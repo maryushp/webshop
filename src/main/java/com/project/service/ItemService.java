@@ -1,5 +1,8 @@
 package com.project.service;
 
+import com.project.exceptionhandler.exceptions.InvalidElementException;
+import com.project.exceptionhandler.exceptions.NoSuchElemException;
+import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.model.Item;
 import com.project.repository.CategoryRepository;
 import com.project.repository.ItemRepository;
@@ -8,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,22 +37,27 @@ public class ItemService implements CrudService<Item>{
             item.setCategories(itemRepository.selectDependenciesById(opItem.get().getId()));
             return item;
         }else {
-            throw new RuntimeException();
+            throw new NoSuchElemException(MessageFormat.format("Item with id = {0} doesn''t exist", id));
         }
     }
 
     @Override
     @Transactional
     public Item create(Item item) {
+        if (!Validation.isItemValid(item))
+            throw new InvalidElementException("Item is invalid, please check your params");
         Item it;
         if(itemRepository.insert(item)){
-            it = itemRepository.selectById(itemRepository.getId(item).orElseThrow(RuntimeException::new)).orElseThrow(RuntimeException::new);
+            it = itemRepository.selectById(itemRepository.getId(item)
+                    .orElseThrow(() -> new NoSuchElemException(MessageFormat.format("Unable to find Item with name = {0}", item.getName()))))
+                    .orElseThrow(() -> new NoSuchElemException(MessageFormat.format("Unable to find Item with name = {0}", item.getName())));
         }else {
-            throw new RuntimeException();
+            throw new SuchElementAlreadyExists("Item with name = " + item.getName() + " already exists");
         }
         item.getCategories().forEach(category -> {
             if (categoryRepository.isExists(category))
-                itemRepository.addCategoryToItem(it.getId(), categoryRepository.getId(category).orElseThrow(RuntimeException::new));
+                itemRepository.addCategoryToItem(it.getId(), categoryRepository.getId(category)
+                        .orElseThrow(() -> new NoSuchElemException("Unable to find category with name = " + category.getName())));
         });
         it.setCategories(itemRepository.selectDependenciesById(it.getId()));
         return it;
@@ -63,7 +72,8 @@ public class ItemService implements CrudService<Item>{
             itemRepository.deleteItemDependenciesById(id);
             item.getCategories().forEach(category -> {
                 if (categoryRepository.isExists(category))
-                    itemRepository.addCategoryToItem(id, categoryRepository.getId(category).orElseThrow(RuntimeException::new));
+                    itemRepository.addCategoryToItem(id, categoryRepository.getId(category)
+                            .orElseThrow(() -> new NoSuchElemException("Unable to find category with name = " + category.getName())));
             });
         }
         return get(id);
@@ -72,6 +82,6 @@ public class ItemService implements CrudService<Item>{
     @Override
     public void delete(int id) {
         if (!itemRepository.delete(id))
-            throw new RuntimeException();
+            throw new NoSuchElemException("Item with id = " + id + " doesn't exist");
     }
 }
