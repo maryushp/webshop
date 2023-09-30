@@ -34,7 +34,7 @@ public class ItemService implements CrudService<Item>{
         Optional<Item> opItem = itemRepository.selectById(id);
         if(opItem.isPresent()){
             Item item = opItem.get();
-            item.setCategories(itemRepository.selectDependenciesById(opItem.get().getId()));
+            item.setCategories(itemRepository.selectDependenciesById(id));
             return item;
         }else {
             throw new NoSuchElemException(MessageFormat.format("Item with id = {0} doesn''t exist", id));
