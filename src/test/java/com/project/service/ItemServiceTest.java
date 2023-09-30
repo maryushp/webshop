@@ -13,10 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -116,6 +119,31 @@ class ItemServiceTest {
         when(itemRepositoryMocked.selectDependenciesById(ID1)).thenReturn(List.of(TEST_CATEGORY));
 
         assertEquals(item, itemServiceMocked.create(item));
+
+    }
+
+    @Test
+    void updateItemSuccess() {
+        Item item = new Item();
+        item.setName(ITEM_NAME);
+        item.setCategories(List.of(TEST_CATEGORY));
+        Map<String, String> objectMap = new HashMap<>();
+        objectMap.put("name", ITEM_NAME);
+        when(itemRepositoryMocked.update(objectMap, ID1)).thenReturn(Optional.empty());
+        doNothing().when(itemRepositoryMocked).deleteItemDependenciesById(ID1);
+        when(categoryRepositoryMocked.isExists(TEST_CATEGORY)).thenReturn(true);
+        when(categoryRepositoryMocked.getId(TEST_CATEGORY)).thenReturn(Optional.of(ID1));
+        doNothing().when(itemRepositoryMocked).addCategoryToItem(ID1, ID1);
+        Item it = new Item();
+        it.setName(ITEM_NAME);
+        it.setId(ID1);
+        when(itemRepositoryMocked.selectById(ID1)).thenReturn(Optional.of(it));
+        when(itemRepositoryMocked.selectDependenciesById(ID1)).thenReturn(List.of(TEST_CATEGORY));
+
+        Item resultItem = itemServiceMocked.update(item, ID1);
+        assertEquals(item.getName(), resultItem.getName());
+        assertEquals(item.getCategories(), resultItem.getCategories());
+
 
     }
 
