@@ -44,7 +44,7 @@ class CategoryServiceTest {
     void createCategoryWhichAlreadyExists() {
         Category cat = new Category();
         cat.setName(TEST_CATEGORY);
-        when(categoryRepositoryMocked.insert(cat)).thenReturn(false);
+        when(categoryRepositoryMocked.isExists(cat)).thenReturn(true);
         SuchElementAlreadyExists thrown = assertThrows(SuchElementAlreadyExists.class, () -> categoryServiceMocked.create(cat));
         assertEquals("Category with name = " + TEST_CATEGORY + " already exists", thrown.getMessage());
     }
@@ -107,6 +107,14 @@ class CategoryServiceTest {
         objectMap.put("name", cat.getName());
         when(categoryRepositoryMocked.update(objectMap, ID1)).thenReturn(Optional.of(cat));
         assertEquals(TEST_CATEGORY, categoryServiceMocked.update(cat, ID1).getName());
+    }
+
+    @Test
+    void updateCategoryNotUniqueName() {
+        Category cat = new Category();
+        cat.setName("TEST");
+        when(categoryRepositoryMocked.isExists(cat)).thenReturn(true);
+        assertThrows(SuchElementAlreadyExists.class, () -> categoryServiceMocked.update(cat, 1));
     }
 
 }

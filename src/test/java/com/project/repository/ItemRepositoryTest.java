@@ -13,6 +13,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,6 +48,11 @@ class ItemRepositoryTest {
     void selectByItemId() {
         Item item = new Item(1, "Item1", 12.0, "description", "2020-09-20 13:00:00.0", null);
         assertEquals(item, itemRepository.selectById(1).orElseThrow());
+    }
+
+    @Test
+    void selectItemByWrongId() {
+        assertEquals(Optional.empty(), itemRepository.selectById(99));
     }
 
     @Test

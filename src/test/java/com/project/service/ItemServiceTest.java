@@ -102,7 +102,7 @@ class ItemServiceTest {
     @Test
     void createItemWhichAlreadyExist() {
         Item item = new Item(1, ITEM_NAME, 13.0, "q", "20.09.2013", List.of(TEST_CATEGORY));
-        when(itemRepositoryMocked.insert(item)).thenReturn(false);
+        when(itemRepositoryMocked.isExists(item)).thenReturn(true);
         SuchElementAlreadyExists thrown = assertThrows(SuchElementAlreadyExists.class, () -> itemServiceMocked.create(item));
         assertEquals("Item with name = " + item.getName() + " already exists", thrown.getMessage());
 

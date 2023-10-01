@@ -9,10 +9,10 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,14 +38,14 @@ class CategoryRepositoryTest {
     }
 
     @Test
-    void selectDependenciesById() {
-        assertEquals(new ArrayList<>(), categoryRepository.selectDependenciesById(0));
-    }
-
-    @Test
     void selectCategoryById() {
         Category category = new Category(1, "Category1");
         assertEquals(category, categoryRepository.selectById(1).orElseThrow());
+    }
+
+    @Test
+    void selectCategoryWrongId() {
+        assertEquals(Optional.empty(), categoryRepository.selectById(99));
     }
 
     @Test
@@ -75,6 +75,13 @@ class CategoryRepositoryTest {
     void isExistsCategory() {
         Category cat = categoryRepository.selectById(1).orElseThrow();
         assertTrue(categoryRepository.isExists(cat));
+    }
+
+    @Test
+    void isExistsAbsentCategory () {
+        Category cat = new Category();
+        cat.setName("TEST");
+        assertFalse(categoryRepository.isExists(cat));
     }
 
     @AfterEach
