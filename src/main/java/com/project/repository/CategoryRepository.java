@@ -1,21 +1,20 @@
 package com.project.repository;
 
 import com.project.model.Category;
-import com.project.model.Item;
 import com.project.utils.AppQuery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CategoryRepository implements CrudRepository<Category, Item>{
+public class CategoryRepository implements CrudRepository<Category> {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -24,13 +23,17 @@ public class CategoryRepository implements CrudRepository<Category, Item>{
     }
 
     @Override
-    public List<Item> selectDependenciesById(int id) {
-        return new ArrayList<>();
-    }
-
-    @Override
     public Optional<Category> selectById(int id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(AppQuery.Category.SELECT_CATEGORY_BY_ID, new Integer[]{id}, new BeanPropertyRowMapper<>(Category.class)));
+        try {
+            Category category = jdbcTemplate.queryForObject(
+                    AppQuery.Category.SELECT_CATEGORY_BY_ID,
+                    new Integer[]{id},
+                    new BeanPropertyRowMapper<>(Category.class)
+            );
+            return Optional.ofNullable(category);
+        } catch (EmptyResultDataAccessException ex) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -40,7 +43,7 @@ public class CategoryRepository implements CrudRepository<Category, Item>{
 
     @Override
     public Optional<Category> update(Map<String, String> objectMap, int id) {
-        jdbcTemplate.update(AppQuery.Category.UPDATE_CATEGORY_BY_ID,objectMap.get("name"), id);
+        jdbcTemplate.update(AppQuery.Category.UPDATE_CATEGORY_BY_ID, objectMap.get("name"), id);
         return selectById(id);
     }
 
@@ -51,11 +54,14 @@ public class CategoryRepository implements CrudRepository<Category, Item>{
 
     @Override
     public Optional<Integer> getId(Category category) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(AppQuery.Category.SELECT_CATEGORY_ID, Integer.class, category.getName()));
+        return Optional.ofNullable(jdbcTemplate.queryForObject(AppQuery.Category.SELECT_CATEGORY_ID, Integer.class,
+                category.getName()));
     }
 
     @Override
     public boolean isExists(Category category) {
-        return jdbcTemplate.queryForObject(AppQuery.Category.IS_CATEGORY_EXISTS, Integer.class, category.getName()) == 1;
+        Integer result = jdbcTemplate.queryForObject(AppQuery.Category.IS_CATEGORY_EXISTS, Integer.class,
+                category.getName());
+        return result != null && result == 1;
     }
 }

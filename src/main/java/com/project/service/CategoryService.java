@@ -14,11 +14,12 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import static com.project.utils.ExceptionMessages.*;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements CrudService<Category>{
+public class CategoryService implements CrudService<Category> {
     private final CategoryRepository categoryRepository;
 
     @Override
@@ -28,39 +29,44 @@ public class CategoryService implements CrudService<Category>{
 
     @Override
     public Category get(int id) {
-        Optional<Category> opCategory = categoryRepository.selectById(id);
-        if(opCategory.isPresent())
-            return opCategory.get();
-        throw new NoSuchElemException(MessageFormat.format("Category with id = {0} doesn''t exist", id));
+        return categoryRepository.selectById(id).orElseThrow(() -> new NoSuchElemException(
+                MessageFormat.format(CATEGORY_NOT_FOUND, id)
+        ));
     }
 
     @Override
     @Transactional
     public Category create(Category category) {
         if (!Validation.isCategoryValid(category))
-            throw new InvalidElementException("Category is invalid, please check your params");
-        if(categoryRepository.insert(category)){
+            throw new InvalidElementException(INVALID_CATEGORY);
+        if (!categoryRepository.isExists(category)) {
+            categoryRepository.insert(category);
             return categoryRepository.selectById(categoryRepository.getId(category)
-                    .orElseThrow(() -> new NoSuchElemException("Unable to find category with name = " + category.getName())))
-                    .orElseThrow(() -> new NoSuchElemException("Unable to find category with name = " + category.getName()));
-        }else {
-            throw new SuchElementAlreadyExists("Category with name = " + category.getName() + " already exists");
+                            .orElseThrow(() -> new IllegalStateException(NON_EMPTY_ID)))
+                    .orElseThrow(() -> new IllegalStateException(NON_EMPTY_CATEGORY));
+        } else {
+            throw new SuchElementAlreadyExists(MessageFormat.format(CATEGORY_ALREADY_EXISTS,
+                    category.getName()));
         }
     }
 
     @Override
     public Category update(Category category, int id) {
-        if(!Validation.isCategoryValid(category))
-            throw new InvalidElementException("Category is invalid, please check your params");
+        if (!Validation.isCategoryValid(category))
+            throw new InvalidElementException(INVALID_CATEGORY);
+        if (categoryRepository.isExists(category))
+            throw new SuchElementAlreadyExists(MessageFormat.format(CATEGORY_ALREADY_EXISTS,
+                    category.getName()));
         Map<String, String> objectMap = new HashMap<>();
         objectMap.put("name", category.getName());
         return categoryRepository.update(objectMap, id)
-                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format("Category with id = {0} doesn''t exist", id)));
+                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(CATEGORY_NOT_FOUND,
+                        id)));
     }
 
     @Override
     public void delete(int id) {
         if (!categoryRepository.delete(id))
-            throw new NoSuchElemException("Category with id = " + id + " doesn't exist");
+            throw new NoSuchElemException(MessageFormat.format(CATEGORY_NOT_FOUND, id));
     }
 }

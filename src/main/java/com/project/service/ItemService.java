@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.project.utils.ExceptionMessages.*;
+
 @Service
 @RequiredArgsConstructor
-public class ItemService implements CrudService<Item>{
+public class ItemService implements CrudService<Item> {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
 
@@ -32,12 +34,12 @@ public class ItemService implements CrudService<Item>{
     @Override
     public Item get(int id) {
         Optional<Item> opItem = itemRepository.selectById(id);
-        if(opItem.isPresent()){
+        if (opItem.isPresent()) {
             Item item = opItem.get();
             item.setCategories(itemRepository.selectDependenciesById(id));
             return item;
-        }else {
-            throw new NoSuchElemException(MessageFormat.format("Item with id = {0} doesn''t exist", id));
+        } else {
+            throw new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id));
         }
     }
 
@@ -45,19 +47,20 @@ public class ItemService implements CrudService<Item>{
     @Transactional
     public Item create(Item item) {
         if (!Validation.isItemValid(item))
-            throw new InvalidElementException("Item is invalid, please check your params");
+            throw new InvalidElementException(INVALID_ITEM);
         Item it;
-        if(itemRepository.insert(item)){
+        if (!itemRepository.isExists(item)) {
+            itemRepository.insert(item);
             it = itemRepository.selectById(itemRepository.getId(item)
-                    .orElseThrow(() -> new NoSuchElemException(MessageFormat.format("Unable to find Item with name = {0}", item.getName()))))
-                    .orElseThrow(() -> new NoSuchElemException(MessageFormat.format("Unable to find Item with name = {0}", item.getName())));
-        }else {
-            throw new SuchElementAlreadyExists("Item with name = " + item.getName() + " already exists");
+                            .orElseThrow(() -> new IllegalStateException(NON_EMPTY_ID)))
+                    .orElseThrow(() -> new IllegalStateException(NON_EMPTY_ITEM));
+        } else {
+            throw new SuchElementAlreadyExists(MessageFormat.format(ITEM_ALREADY_EXISTS, item.getName()));
         }
         item.getCategories().forEach(category -> {
             if (categoryRepository.isExists(category))
-                itemRepository.addCategoryToItem(it.getId(), categoryRepository.getId(category)
-                        .orElseThrow(() -> new NoSuchElemException("Unable to find category with name = " + category.getName())));
+                itemRepository.addCategoryToItem(it.getId(),
+                        categoryRepository.getId(category).orElseThrow(() -> new IllegalStateException(NON_EMPTY_ID)));
         });
         it.setCategories(itemRepository.selectDependenciesById(it.getId()));
         return it;
@@ -66,14 +69,14 @@ public class ItemService implements CrudService<Item>{
     @Override
     public Item update(Item item, int id) {
         Map<String, String> objectMap = Validation.itemToMap(item);
-        if(!objectMap.isEmpty())
+        if (!objectMap.isEmpty())
             itemRepository.update(objectMap, id);
-        if(item.getCategories() != null) {
+        if (item.getCategories() != null) {
             itemRepository.deleteItemDependenciesById(id);
             item.getCategories().forEach(category -> {
                 if (categoryRepository.isExists(category))
-                    itemRepository.addCategoryToItem(id, categoryRepository.getId(category)
-                            .orElseThrow(() -> new NoSuchElemException("Unable to find category with name = " + category.getName())));
+                    itemRepository.addCategoryToItem(id,
+                            categoryRepository.getId(category).orElseThrow(() -> new IllegalStateException(NON_EMPTY_ID)));
             });
         }
         return get(id);
@@ -82,6 +85,6 @@ public class ItemService implements CrudService<Item>{
     @Override
     public void delete(int id) {
         if (!itemRepository.delete(id))
-            throw new NoSuchElemException("Item with id = " + id + " doesn't exist");
+            throw new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id));
     }
 }
