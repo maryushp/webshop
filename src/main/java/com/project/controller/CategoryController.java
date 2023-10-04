@@ -3,10 +3,10 @@ package com.project.controller;
 import com.project.model.Category;
 import com.project.service.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,7 +17,8 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        return new ResponseEntity<>(categoryService.create(category), HttpStatus.CREATED);
+        Category createdCategory = categoryService.create(category);
+        return ResponseEntity.created(URI.create("/category/" + createdCategory.getId())).body(createdCategory);
     }
 
     @GetMapping

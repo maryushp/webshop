@@ -3,10 +3,10 @@ package com.project.controller;
 import com.project.model.Item;
 import com.project.service.ItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,7 +17,8 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<Item> createItem(@RequestBody Item item) {
-        return new ResponseEntity<>(itemService.create(item), HttpStatus.CREATED);
+        Item createdItem = itemService.create(item);
+        return ResponseEntity.created(URI.create("/item/" + createdItem.getId())).body(createdItem);
     }
 
     @GetMapping
