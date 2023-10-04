@@ -18,17 +18,17 @@ import org.springframework.core.Ordered;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoSuchElemException.class)
-    public ResponseEntity<Object> handleNoSuchElementException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleNoSuchElementException(NoSuchElemException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(SuchElementAlreadyExists.class)
-    public ResponseEntity<Object> handleSuchElementAlreadyExists(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleSuchElementAlreadyExists(SuchElementAlreadyExists ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(InvalidElementException.class)
-    public ResponseEntity<Object> handleInvalidElementException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleInvalidElementException(InvalidElementException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }
