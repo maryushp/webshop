@@ -12,5 +12,4 @@ public interface CrudRepository<T>{
     boolean delete(int id);
     Optional<Integer> getId(T t);
     boolean isExists (T t);
-
 }

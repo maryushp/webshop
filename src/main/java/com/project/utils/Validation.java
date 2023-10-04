@@ -40,5 +40,4 @@ public class Validation {
                 && item.getPrice() != null && item.getPrice() >= 0 && item.getDescription() != null
                 && areCategoriesValid(item.getCategories());
     }
-
 }

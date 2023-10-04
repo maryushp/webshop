@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.core.Ordered;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@ControllerAdvice()
+@ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoSuchElemException.class)
