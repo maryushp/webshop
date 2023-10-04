@@ -38,6 +38,6 @@ public class ItemController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Item> deleteItem(@PathVariable("id") int id) {
         itemService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }
