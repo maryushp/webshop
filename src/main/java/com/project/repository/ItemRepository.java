@@ -21,13 +21,14 @@ public class ItemRepository implements CrudRepository<Item> {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Item> selectAll() {
-        return jdbcTemplate.query(AppQuery.Item.SELECT_ALL_ITEMS, new BeanPropertyRowMapper<>(Item.class));
+    public boolean insert(Item item) {
+        return jdbcTemplate.update(AppQuery.Item.INSERT_ITEM, item.getName(), item.getPrice(), item.getDescription(),
+                LocalDateTime.now()) == 1;
     }
 
-    public List<Category> selectDependenciesById(int id) {
-        return jdbcTemplate.query(AppQuery.Item.SELECT_ALL_CATEGORIES_BY_ITEM_ID, new Integer[]{id},
-                new BeanPropertyRowMapper<>(Category.class));
+    @Override
+    public List<Item> selectAll() {
+        return jdbcTemplate.query(AppQuery.Item.SELECT_ALL_ITEMS, new BeanPropertyRowMapper<>(Item.class));
     }
 
     @Override
@@ -42,12 +43,6 @@ public class ItemRepository implements CrudRepository<Item> {
         } catch (EmptyResultDataAccessException ex) {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public boolean insert(Item item) {
-        return jdbcTemplate.update(AppQuery.Item.INSERT_ITEM, item.getName(), item.getPrice(), item.getDescription(),
-                LocalDateTime.now()) == 1;
     }
 
     @Override
@@ -70,6 +65,11 @@ public class ItemRepository implements CrudRepository<Item> {
     @Override
     public boolean delete(int id) {
         return jdbcTemplate.update(AppQuery.Item.DELETE_ITEM_BY_ID, id) == 1;
+    }
+
+    public List<Category> selectDependenciesById(int id) {
+        return jdbcTemplate.query(AppQuery.Item.SELECT_ALL_CATEGORIES_BY_ITEM_ID, new Integer[]{id},
+                new BeanPropertyRowMapper<>(Category.class));
     }
 
     @Override

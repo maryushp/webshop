@@ -15,6 +15,11 @@ import java.util.List;
 public class ItemController {
     private final ItemService itemService;
 
+    @PostMapping
+    public ResponseEntity<Item> createItem(@RequestBody Item item) {
+        return new ResponseEntity<>(itemService.create(item), HttpStatus.CREATED);
+    }
+
     @GetMapping
     public ResponseEntity<List<Item>> getAll(){
         return ResponseEntity.ok(itemService.getAll());
@@ -25,19 +30,14 @@ public class ItemController {
         return ResponseEntity.ok(itemService.get(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody Item item) {
-        return new ResponseEntity<>(itemService.create(item), HttpStatus.CREATED);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Item> updateCategory(@PathVariable("id") int id, @RequestBody Item item) {
+        return ResponseEntity.ok(itemService.update(item, id));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Item> deleteItem(@PathVariable("id") int id) {
         itemService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<Item> updateCategory(@PathVariable("id") int id, @RequestBody Item item) {
-        return ResponseEntity.ok(itemService.update(item, id));
     }
 }

@@ -25,25 +25,6 @@ public class ItemService implements CrudService<Item> {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Item> getAll() {
-        List<Item> items = itemRepository.selectAll();
-        items.forEach(item -> item.setCategories(itemRepository.selectDependenciesById(item.getId())));
-        return items;
-    }
-
-    @Override
-    public Item get(int id) {
-        Optional<Item> opItem = itemRepository.selectById(id);
-        if (opItem.isPresent()) {
-            Item item = opItem.get();
-            item.setCategories(itemRepository.selectDependenciesById(id));
-            return item;
-        } else {
-            throw new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id));
-        }
-    }
-
-    @Override
     @Transactional
     public Item create(Item item) {
         if (!Validation.isItemValid(item))
@@ -64,6 +45,25 @@ public class ItemService implements CrudService<Item> {
         });
         it.setCategories(itemRepository.selectDependenciesById(it.getId()));
         return it;
+    }
+
+    @Override
+    public List<Item> getAll() {
+        List<Item> items = itemRepository.selectAll();
+        items.forEach(item -> item.setCategories(itemRepository.selectDependenciesById(item.getId())));
+        return items;
+    }
+
+    @Override
+    public Item get(int id) {
+        Optional<Item> opItem = itemRepository.selectById(id);
+        if (opItem.isPresent()) {
+            Item item = opItem.get();
+            item.setCategories(itemRepository.selectDependenciesById(id));
+            return item;
+        } else {
+            throw new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id));
+        }
     }
 
     @Override

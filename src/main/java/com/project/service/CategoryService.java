@@ -23,18 +23,6 @@ public class CategoryService implements CrudService<Category> {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> getAll() {
-        return categoryRepository.selectAll();
-    }
-
-    @Override
-    public Category get(int id) {
-        return categoryRepository.selectById(id).orElseThrow(() -> new NoSuchElemException(
-                MessageFormat.format(CATEGORY_NOT_FOUND, id)
-        ));
-    }
-
-    @Override
     @Transactional
     public Category create(Category category) {
         if (!Validation.isCategoryValid(category))
@@ -48,6 +36,18 @@ public class CategoryService implements CrudService<Category> {
             throw new SuchElementAlreadyExists(MessageFormat.format(CATEGORY_ALREADY_EXISTS,
                     category.getName()));
         }
+    }
+
+    @Override
+    public List<Category> getAll() {
+        return categoryRepository.selectAll();
+    }
+
+    @Override
+    public Category get(int id) {
+        return categoryRepository.selectById(id).orElseThrow(() -> new NoSuchElemException(
+                MessageFormat.format(CATEGORY_NOT_FOUND, id)
+        ));
     }
 
     @Override

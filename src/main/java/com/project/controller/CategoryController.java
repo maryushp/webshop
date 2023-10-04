@@ -15,6 +15,11 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @PostMapping
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+        return new ResponseEntity<>(categoryService.create(category), HttpStatus.CREATED);
+    }
+
     @GetMapping
     ResponseEntity<List<Category>> getAll(){
         return ResponseEntity.ok(categoryService.getAll());
@@ -25,19 +30,14 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.get(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        return new ResponseEntity<>(categoryService.create(category), HttpStatus.CREATED);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") int id, @RequestBody Category category) {
+        return ResponseEntity.ok(categoryService.update(category, id));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Category> deleteCategory(@PathVariable("id") int id) {
         categoryService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") int id, @RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.update(category, id));
     }
 }

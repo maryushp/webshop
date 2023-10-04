@@ -18,6 +18,11 @@ public class CategoryRepository implements CrudRepository<Category> {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
+    public boolean insert(Category category) {
+        return jdbcTemplate.update(AppQuery.Category.INSERT_CATEGORY, category.getName()) == 1;
+    }
+
+    @Override
     public List<Category> selectAll() {
         return jdbcTemplate.query(AppQuery.Category.SELECT_ALL_CATEGORIES, new BeanPropertyRowMapper<>(Category.class));
     }
@@ -34,11 +39,6 @@ public class CategoryRepository implements CrudRepository<Category> {
         } catch (EmptyResultDataAccessException ex) {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public boolean insert(Category category) {
-        return jdbcTemplate.update(AppQuery.Category.INSERT_CATEGORY, category.getName()) == 1;
     }
 
     @Override
