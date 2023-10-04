@@ -67,6 +67,7 @@ public class ItemService implements CrudService<Item> {
     }
 
     @Override
+    @Transactional
     public Item update(Item item, int id) {
         Map<String, String> objectMap = Validation.itemToMap(item);
         if (!objectMap.isEmpty())

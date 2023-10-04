@@ -51,6 +51,7 @@ public class CategoryService implements CrudService<Category> {
     }
 
     @Override
+    @Transactional
     public Category update(Category category, int id) {
         if (!Validation.isCategoryValid(category))
             throw new InvalidElementException(INVALID_CATEGORY);
