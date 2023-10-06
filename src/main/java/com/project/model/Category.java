@@ -1,13 +1,34 @@
 package com.project.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.Hibernate;
 
+import java.util.Objects;
+
+@Entity
+@Table(name = "category")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 public class Category {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || Hibernate.getClass(this) != Hibernate.getClass(obj)) return false;
+        Category category = (Category) obj;
+        return id != null && Objects.equals(id, category.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

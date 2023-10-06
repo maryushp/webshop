@@ -4,8 +4,12 @@ import java.util.List;
 
 public interface CrudService<T> {
     List<T> getAll();
-    T get(int id);
+
+    T get(Long id);
+
     T create(T t);
-    T update(T t, int id);
-    void delete(int id);
+
+    T update(T t, Long id);
+
+    void delete(Long id);
 }
