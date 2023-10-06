@@ -27,17 +27,17 @@ public class ItemController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Item> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Item> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(itemService.get(id));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Item> updateCategory(@PathVariable("id") int id, @RequestBody Item item) {
+    public ResponseEntity<Item> updateCategory(@PathVariable("id") Long id, @RequestBody Item item) {
         return ResponseEntity.ok(itemService.update(item, id));
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Item> deleteItem(@PathVariable("id") int id) {
+    public ResponseEntity<Item> deleteItem(@PathVariable("id") Long id) {
         itemService.delete(id);
         return ResponseEntity.noContent().build();
     }
