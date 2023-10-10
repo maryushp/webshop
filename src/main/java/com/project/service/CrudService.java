@@ -1,5 +1,9 @@
 package com.project.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+
 import java.util.List;
 
 public interface CrudService<T> {
@@ -9,7 +13,7 @@ public interface CrudService<T> {
 
     T create(T t);
 
-    T update(T t, Long id);
+    T update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException;
 
     void delete(Long id);
 }

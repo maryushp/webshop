@@ -1,5 +1,11 @@
 package com.project.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.exceptionhandler.exceptions.InvalidElementException;
 import com.project.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
@@ -50,21 +56,25 @@ public class ItemService implements CrudService<Item> {
 
     @Override
     @Transactional
-    public Item update(Item item, Long id) {
-        Item it =
+    public Item update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+        Item dbItem =
                 itemRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id)));
-        if (item.getName() != null)
-            it.setName(item.getName());
-        if (item.getPrice() != null)
-            it.setPrice(item.getPrice());
-        if (item.getDescription() != null)
-            it.setDescription(item.getDescription());
-        if (item.getCategories() != null) {
-            List<Category> actualCategories = item.getCategories();
-            it.setCategories(categoryService.getExistedCategories(actualCategories));
-        }
 
-        return itemRepository.save(it);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModules(new JavaTimeModule());
+
+        JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbItem, JsonNode.class));
+        Item updatedItem = objectMapper.treeToValue(updatedJson, Item.class);
+
+        if (!Validation.isItemValid(updatedItem))
+            throw new InvalidElementException(INVALID_ITEM);
+
+        dbItem.setName(updatedItem.getName());
+        dbItem.setPrice(updatedItem.getPrice());
+        dbItem.setDescription(updatedItem.getDescription());
+        dbItem.setCategories(updatedItem.getCategories());
+
+        return itemRepository.save(dbItem);
     }
 
     @Override

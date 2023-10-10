@@ -1,5 +1,8 @@
 package com.project.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.model.Category;
 import com.project.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +25,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAll(){
+    public ResponseEntity<List<Category>> getAll() {
         return ResponseEntity.ok(categoryService.getAll());
     }
 
@@ -31,9 +34,9 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.get(id));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") Long id, @RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.update(category, id));
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") Long id, @RequestBody JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+        return ResponseEntity.ok(categoryService.update(id, patch));
     }
 
     @DeleteMapping(value = "/{id}")
