@@ -9,8 +9,10 @@ import com.project.exceptionhandler.exceptions.InvalidElementException;
 import com.project.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.model.Category;
+import com.project.model.CategoryDTO;
 import com.project.repository.CategoryRepository;
 import com.project.utils.Validation;
+import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -24,35 +26,39 @@ import static com.project.utils.ExceptionMessages.*;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements CrudService<Category> {
+public class CategoryService implements CrudService<CategoryDTO> {
     private final CategoryRepository categoryRepository;
+    private final EntityDtoMapper entityDtoMapper;
 
     @Override
     @Transactional
-    public Category create(Category category) {
+    public CategoryDTO create(CategoryDTO categoryDto) {
+        Category category = entityDtoMapper.toCategory(categoryDto);
+
         if (!Validation.isCategoryValid(category))
             throw new InvalidElementException(INVALID_CATEGORY);
         if (categoryRepository.exists(Example.of(category)))
             throw new SuchElementAlreadyExists(MessageFormat.format(CATEGORY_ALREADY_EXISTS,
                     category.getName()));
-        return categoryRepository.save(category);
+
+        return entityDtoMapper.toCategoryDTO(categoryRepository.save(category));
 
     }
 
     @Override
-    public List<Category> getAll() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> getAll() {
+        return categoryRepository.findAll().stream().map(entityDtoMapper::toCategoryDTO).toList();
     }
 
-    public Category get(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new NoSuchElemException(
-                MessageFormat.format(CATEGORY_NOT_FOUND_ID, id)
+    public CategoryDTO get(Long id) {
+        return entityDtoMapper.toCategoryDTO(categoryRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(CATEGORY_NOT_FOUND_ID, id))
         ));
     }
 
     @Override
     @Transactional
-    public Category update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+    public CategoryDTO update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
         Category dbCategory = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElemException(
                 MessageFormat.format(CATEGORY_NOT_FOUND_ID, id)));
 
@@ -69,7 +75,7 @@ public class CategoryService implements CrudService<Category> {
 
         dbCategory.setName(updatedCategory.getName());
 
-        return categoryRepository.save(dbCategory);
+        return entityDtoMapper.toCategoryDTO(categoryRepository.save(dbCategory));
     }
 
     @Override

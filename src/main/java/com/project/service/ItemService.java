@@ -11,8 +11,10 @@ import com.project.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.model.Category;
 import com.project.model.Item;
+import com.project.model.ItemDTO;
 import com.project.repository.ItemRepository;
 import com.project.utils.Validation;
+import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -26,13 +28,16 @@ import static com.project.utils.ExceptionMessages.*;
 
 @Service
 @RequiredArgsConstructor
-public class ItemService implements CrudService<Item> {
+public class ItemService implements CrudService<ItemDTO> {
     private final ItemRepository itemRepository;
     private final CategoryService categoryService;
+    private final EntityDtoMapper entityDtoMapper;
 
     @Override
     @Transactional
-    public Item create(Item item) {
+    public ItemDTO create(ItemDTO itemDto) {
+        Item item = entityDtoMapper.toItem(itemDto);
+
         if (!Validation.isItemValid(item))
             throw new InvalidElementException(INVALID_ITEM);
 
@@ -45,22 +50,24 @@ public class ItemService implements CrudService<Item> {
 
         item.setCreationDate(LocalDateTime.now());
 
-        return itemRepository.save(item);
+        return entityDtoMapper.toItemDTO(itemRepository.save(item));
     }
 
     @Override
-    public List<Item> getAll() {
-        return itemRepository.findAll();
+    public List<ItemDTO> getAll() {
+        return itemRepository.findAll().stream().map(entityDtoMapper::toItemDTO).toList();
     }
 
     @Override
-    public Item get(Long id) {
-        return itemRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id)));
+    public ItemDTO get(Long id) {
+        return entityDtoMapper.toItemDTO(itemRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id))
+                ));
     }
 
     @Override
     @Transactional
-    public Item update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+    public ItemDTO update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
         Item dbItem =
                 itemRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id)));
 
@@ -78,7 +85,7 @@ public class ItemService implements CrudService<Item> {
         dbItem.setDescription(updatedItem.getDescription());
         dbItem.setCategories(updatedItem.getCategories());
 
-        return itemRepository.save(dbItem);
+        return entityDtoMapper.toItemDTO(itemRepository.save(dbItem));
     }
 
     @Override
