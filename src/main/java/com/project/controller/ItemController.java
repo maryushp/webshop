@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO itemDto) {
+    public ResponseEntity<ItemDTO> createItem(@RequestBody @Valid ItemDTO itemDto) {
         ItemDTO createdItem = itemService.create(itemDto);
         return ResponseEntity.created(URI.create("/item/" + createdItem.getId())).body(createdItem);
     }

@@ -6,14 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.project.exceptionhandler.exceptions.InvalidElementException;
 import com.project.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.model.Category;
 import com.project.model.Item;
 import com.project.model.ItemDTO;
 import com.project.repository.ItemRepository;
-import com.project.utils.Validation;
 import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -37,9 +35,6 @@ public class ItemService implements CrudService<ItemDTO> {
     @Transactional
     public ItemDTO create(ItemDTO itemDto) {
         Item item = entityDtoMapper.toItem(itemDto);
-
-        if (!Validation.isItemValid(item))
-            throw new InvalidElementException(INVALID_ITEM);
 
         if (itemRepository.exists(Example.of(item))) {
             throw new SuchElementAlreadyExists(MessageFormat.format(ITEM_ALREADY_EXISTS, item.getName()));
@@ -76,9 +71,6 @@ public class ItemService implements CrudService<ItemDTO> {
 
         JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbItem, JsonNode.class));
         Item updatedItem = objectMapper.treeToValue(updatedJson, Item.class);
-
-        if (!Validation.isItemValid(updatedItem))
-            throw new InvalidElementException(INVALID_ITEM);
 
         dbItem.setName(updatedItem.getName());
         dbItem.setPrice(updatedItem.getPrice());

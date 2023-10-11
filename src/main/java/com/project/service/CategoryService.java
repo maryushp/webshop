@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.project.exceptionhandler.exceptions.InvalidElementException;
 import com.project.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.model.Category;
 import com.project.model.CategoryDTO;
 import com.project.repository.CategoryRepository;
-import com.project.utils.Validation;
 import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -35,8 +33,6 @@ public class CategoryService implements CrudService<CategoryDTO> {
     public CategoryDTO create(CategoryDTO categoryDto) {
         Category category = entityDtoMapper.toCategory(categoryDto);
 
-        if (!Validation.isCategoryValid(category))
-            throw new InvalidElementException(INVALID_CATEGORY);
         if (categoryRepository.exists(Example.of(category)))
             throw new SuchElementAlreadyExists(MessageFormat.format(CATEGORY_ALREADY_EXISTS,
                     category.getName()));
@@ -66,9 +62,6 @@ public class CategoryService implements CrudService<CategoryDTO> {
 
         JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbCategory, JsonNode.class));
         Category updatedCategory = objectMapper.treeToValue(updatedJson, Category.class);
-
-        if (!Validation.isCategoryValid(updatedCategory))
-            throw new InvalidElementException(INVALID_CATEGORY);
 
         if (categoryRepository.getCategoryByName(updatedCategory.getName()).isPresent())
             throw new SuchElementAlreadyExists(MessageFormat.format(CATEGORY_ALREADY_EXISTS, updatedCategory.getName()));
