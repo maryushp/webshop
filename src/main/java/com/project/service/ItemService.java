@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.project.utils.ExceptionMessages.*;
@@ -41,6 +42,9 @@ public class ItemService implements CrudService<Item> {
 
         List<Category> actualCategories = item.getCategories();
         item.setCategories(categoryService.getExistedCategories(actualCategories));
+
+        item.setCreationDate(LocalDateTime.now());
+
         return itemRepository.save(item);
     }
 

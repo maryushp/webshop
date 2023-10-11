@@ -1,10 +1,12 @@
 package com.project.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,10 +24,10 @@ public class Item {
     private String name;
     private Double price;
     private String description;
-    //TODO fix 'null' creation_date
     @CreatedDate
     @Column(name = "creation_date")
-    private String creationDate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime creationDate;
     @ManyToMany
     @ToString.Exclude
     @JoinTable(name = "item_has_category", joinColumns = @JoinColumn(name = "item_id"),
