@@ -7,11 +7,13 @@ import com.project.model.CategoryDTO;
 import com.project.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +28,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getAll() {
-        return ResponseEntity.ok(categoryService.getAll());
+    public ResponseEntity<Page<CategoryDTO>> getAll(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(categoryService.getAll(pageable));
     }
 
     @GetMapping(value = "/{id}")

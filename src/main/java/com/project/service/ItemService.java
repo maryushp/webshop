@@ -15,6 +15,8 @@ import com.project.repository.ItemRepository;
 import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +51,8 @@ public class ItemService implements CrudService<ItemDTO> {
     }
 
     @Override
-    public List<ItemDTO> getAll() {
-        return itemRepository.findAll().stream().map(entityDtoMapper::toItemDTO).toList();
+    public Page<ItemDTO> getAll(Pageable pageable) {
+        return itemRepository.findAll(pageable).map(entityDtoMapper::toItemDTO);
     }
 
     @Override

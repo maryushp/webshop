@@ -4,6 +4,11 @@ spring:
     username: ${SQL_USERNAME}
     password: ${SQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+
 logging:
   level:
     root: debug

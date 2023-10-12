@@ -13,6 +13,8 @@ import com.project.repository.CategoryRepository;
 import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +44,8 @@ public class CategoryService implements CrudService<CategoryDTO> {
     }
 
     @Override
-    public List<CategoryDTO> getAll() {
-        return categoryRepository.findAll().stream().map(entityDtoMapper::toCategoryDTO).toList();
+    public Page<CategoryDTO> getAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(entityDtoMapper::toCategoryDTO);
     }
 
     public CategoryDTO get(Long id) {

@@ -3,11 +3,11 @@ package com.project.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CrudService<T> {
-    List<T> getAll();
+    Page<T> getAll(Pageable pageable);
 
     T get(Long id);
 

@@ -6,12 +6,14 @@ import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.model.ItemDTO;
 import com.project.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/item")
@@ -26,8 +28,8 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDTO>> getAll(){
-        return ResponseEntity.ok(itemService.getAll());
+    public ResponseEntity<Page<ItemDTO>> getAll(@PageableDefault Pageable pageable){
+        return ResponseEntity.ok(itemService.getAll(pageable));
     }
 
     @GetMapping(value = "/{id}")
