@@ -1,10 +1,10 @@
-package com.project.controller;
+package com.project.category.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.project.model.CategoryDTO;
-import com.project.service.CategoryService;
+import com.project.category.model.CategoryDTO;
+import com.project.category.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

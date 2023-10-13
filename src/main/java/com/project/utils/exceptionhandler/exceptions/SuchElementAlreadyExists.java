@@ -1,4 +1,4 @@
-package com.project.exceptionhandler.exceptions;
+package com.project.utils.exceptionhandler.exceptions;
 
 public class SuchElementAlreadyExists extends ApplicationException {
 

@@ -1,4 +1,4 @@
-package com.project.service;
+package com.project.item.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -6,12 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.project.exceptionhandler.exceptions.NoSuchElemException;
-import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
-import com.project.model.Category;
-import com.project.model.Item;
-import com.project.model.ItemDTO;
-import com.project.repository.ItemRepository;
+import com.project.category.service.CategoryService;
+import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
+import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
+import com.project.category.model.Category;
+import com.project.item.model.Item;
+import com.project.item.model.ItemDTO;
+import com.project.item.repository.ItemRepository;
 import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -24,11 +25,11 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.project.utils.ExceptionMessages.*;
+import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
 @Service
 @RequiredArgsConstructor
-public class ItemService implements CrudService<ItemDTO> {
+public class ItemService implements CrudItemService {
     private final ItemRepository itemRepository;
     private final CategoryService categoryService;
     private final EntityDtoMapper entityDtoMapper;

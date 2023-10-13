@@ -1,7 +1,9 @@
-package com.project.model;
+package com.project.item.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import static com.project.utils.ExceptionMessages.*;
+import static com.project.utils.exceptionhandler.ExceptionMessages.*;
+
+import com.project.category.model.CategoryDTO;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

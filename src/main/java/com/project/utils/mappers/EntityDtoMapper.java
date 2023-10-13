@@ -1,9 +1,9 @@
 package com.project.utils.mappers;
 
-import com.project.model.Category;
-import com.project.model.CategoryDTO;
-import com.project.model.Item;
-import com.project.model.ItemDTO;
+import com.project.category.model.Category;
+import com.project.category.model.CategoryDTO;
+import com.project.item.model.Item;
+import com.project.item.model.ItemDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

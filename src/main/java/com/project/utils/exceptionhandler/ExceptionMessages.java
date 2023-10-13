@@ -1,4 +1,4 @@
-package com.project.utils;
+package com.project.utils.exceptionhandler;
 
 import lombok.experimental.UtilityClass;
 

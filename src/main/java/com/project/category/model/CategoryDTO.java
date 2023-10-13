@@ -1,4 +1,4 @@
-package com.project.model;
+package com.project.category.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static com.project.utils.ExceptionMessages.*;
+import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
 @Data
 @AllArgsConstructor

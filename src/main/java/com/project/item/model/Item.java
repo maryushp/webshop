@@ -1,6 +1,7 @@
-package com.project.model;
+package com.project.item.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.category.model.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;

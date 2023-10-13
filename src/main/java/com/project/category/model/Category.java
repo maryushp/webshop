@@ -1,4 +1,4 @@
-package com.project.model;
+package com.project.category.model;
 
 import jakarta.persistence.*;
 import lombok.*;

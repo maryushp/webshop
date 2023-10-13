@@ -1,6 +1,6 @@
-package com.project.repository;
+package com.project.category.repository;
 
-import com.project.model.Category;
+import com.project.category.model.Category;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

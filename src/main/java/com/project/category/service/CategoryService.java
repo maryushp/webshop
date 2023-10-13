@@ -1,15 +1,15 @@
-package com.project.service;
+package com.project.category.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.project.exceptionhandler.exceptions.NoSuchElemException;
-import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
-import com.project.model.Category;
-import com.project.model.CategoryDTO;
-import com.project.repository.CategoryRepository;
+import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
+import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
+import com.project.category.model.Category;
+import com.project.category.model.CategoryDTO;
+import com.project.category.repository.CategoryRepository;
 import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -22,11 +22,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.project.utils.ExceptionMessages.*;
+import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements CrudService<CategoryDTO> {
+public class CategoryService implements CrudCategoryService {
     private final CategoryRepository categoryRepository;
     private final EntityDtoMapper entityDtoMapper;
 
@@ -48,6 +48,7 @@ public class CategoryService implements CrudService<CategoryDTO> {
         return categoryRepository.findAll(pageable).map(entityDtoMapper::toCategoryDTO);
     }
 
+    @Override
     public CategoryDTO get(Long id) {
         return entityDtoMapper.toCategoryDTO(categoryRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(CATEGORY_NOT_FOUND_ID, id))

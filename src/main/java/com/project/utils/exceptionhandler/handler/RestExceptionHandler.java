@@ -1,7 +1,7 @@
-package com.project.exceptionhandler.handler;
+package com.project.utils.exceptionhandler.handler;
 
-import com.project.exceptionhandler.exceptions.NoSuchElemException;
-import com.project.exceptionhandler.exceptions.SuchElementAlreadyExists;
+import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
+import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.core.Ordered;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
-import static com.project.utils.ExceptionMessages.INVALID_ENTITY;
+import static com.project.utils.exceptionhandler.ExceptionMessages.INVALID_ENTITY;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice

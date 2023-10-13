@@ -1,10 +1,10 @@
-package com.project.controller;
+package com.project.item.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.project.model.ItemDTO;
-import com.project.service.ItemService;
+import com.project.item.model.ItemDTO;
+import com.project.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
