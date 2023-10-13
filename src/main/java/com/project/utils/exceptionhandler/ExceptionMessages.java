@@ -19,4 +19,14 @@ public final class ExceptionMessages {
     public static final String ITEM_ALREADY_EXISTS = "Item with name = {0} already exists";
     public static final String ITEM_NOT_FOUND = "Item with id = {0} doesn''t exist";
     public static final String INVALID_ENTITY = "Entity is invalid, check your params";
+    public static final String USER_EMAIL_SHOULD_BE_LESS_THAN_45_CHARS = "User email should be less than 45 chars";
+    public static final String USER_EMAIL_SHOULD_PRESENT_AND_NOT_BLANK = "User email should present and shouldn't be blank";
+    public static final String USER_PASSWORD_SHOULD_BE_LESS_THAN_45_CHARS = "User password should be less than 45 chars";
+    public static final String USER_PASSWORD_SHOULD_PRESENT_AND_NOT_BLANK = "User password should present and shouldn't be blank";
+    public static final String USER_NAME_SHOULD_BE_LESS_THAN_45_CHARS = "User name should be less than 45 chars";
+    public static final String USER_NAME_SHOULD_PRESENT_AND_NOT_BLANK = "User name should present and shouldn't be blank";
+    public static final String USER_SURNAME_SHOULD_BE_LESS_THAN_45_CHARS = "User surname should be less than 45 chars";
+    public static final String USER_SURNAME_SHOULD_PRESENT_AND_NOT_BLANK = "User surname should present and shouldn't be blank";
+    public static final String USER_ROLE_SHOULD_PRESENT = "User role should present";
+    public static final String USER_NOT_FOUND = "User with id = {0} doesn''t exist";
 }
