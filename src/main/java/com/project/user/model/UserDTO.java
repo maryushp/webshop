@@ -16,9 +16,6 @@ public class UserDTO {
     @Size(max = 45, message = USER_EMAIL_SHOULD_BE_LESS_THAN_45_CHARS)
     @NotBlank(message = USER_EMAIL_SHOULD_PRESENT_AND_NOT_BLANK)
     private String email;
-    @Size(max = 45, message = USER_PASSWORD_SHOULD_BE_LESS_THAN_45_CHARS)
-    @NotBlank(message = USER_PASSWORD_SHOULD_PRESENT_AND_NOT_BLANK)
-    private String password;
     @Size(max = 45, message = USER_NAME_SHOULD_BE_LESS_THAN_45_CHARS)
     @NotBlank(message = USER_NAME_SHOULD_PRESENT_AND_NOT_BLANK)
     private String name;
