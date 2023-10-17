@@ -1,6 +1,8 @@
 package com.project.user.model;
 
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
+
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,6 +17,7 @@ public class UserDTO {
     private Long id;
     @Size(max = 45, message = USER_EMAIL_SHOULD_BE_LESS_THAN_45_CHARS)
     @NotBlank(message = USER_EMAIL_SHOULD_PRESENT_AND_NOT_BLANK)
+    @Email(message = EMAIL_SHOULD_BE_VALID)
     private String email;
     @Size(max = 45, message = USER_NAME_SHOULD_BE_LESS_THAN_45_CHARS)
     @NotBlank(message = USER_NAME_SHOULD_PRESENT_AND_NOT_BLANK)
