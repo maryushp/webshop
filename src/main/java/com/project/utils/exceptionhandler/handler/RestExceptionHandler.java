@@ -5,6 +5,7 @@ import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,5 +38,12 @@ public class RestExceptionHandler {
         String errorMessage = fieldError != null ? fieldError.getDefaultMessage() : INVALID_ENTITY;
         Problem problem = Problem.builder().withTitle("Bad Request").withStatus(Status.BAD_REQUEST).withDetail(errorMessage).build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Problem> badCredentialsException(BadCredentialsException ex) {
+        Problem problem =
+                Problem.builder().withTitle("Unauthorized").withStatus(Status.UNAUTHORIZED).withDetail(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(problem);
     }
 }
