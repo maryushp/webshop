@@ -31,4 +31,5 @@ public final class ExceptionMessages {
     public static final String ITEM_NOT_FOUND_NAME = "Item with name = {0} doesn''t exist";
     public static final String ORDER_NOT_FOUND = "Order with id = {0} doesn''t exist";
     public static final String EMAIL_SHOULD_BE_VALID = "Email should be valid";
+    public static final String SUCH_USER_EXISTS = "User with email = {0} already exists";
 }

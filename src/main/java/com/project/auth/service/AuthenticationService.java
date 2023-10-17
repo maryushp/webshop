@@ -7,12 +7,17 @@ import com.project.security.JwtService;
 import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.repository.UserRepository;
+import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.MessageFormat;
+
+import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +36,11 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
+
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new SuchElementAlreadyExists(MessageFormat.format(SUCH_USER_EXISTS, user.getEmail()));
+        }
+
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
