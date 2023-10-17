@@ -25,11 +25,12 @@ public final class ExceptionMessages {
     public static final String USER_NAME_SHOULD_PRESENT_AND_NOT_BLANK = "User name should present and shouldn't be blank";
     public static final String USER_SURNAME_SHOULD_BE_LESS_THAN_45_CHARS = "User surname should be less than 45 chars";
     public static final String USER_SURNAME_SHOULD_PRESENT_AND_NOT_BLANK = "User surname should present and shouldn't be blank";
-    public static final String USER_ROLE_SHOULD_PRESENT = "User role should present";
     public static final String USER_NOT_FOUND = "User with id = {0} doesn''t exist";
     public static final String ORDER_MUST_HAVE_ITEMS = "Order must have items";
     public static final String ITEM_NOT_FOUND_NAME = "Item with name = {0} doesn''t exist";
     public static final String ORDER_NOT_FOUND = "Order with id = {0} doesn''t exist";
     public static final String EMAIL_SHOULD_BE_VALID = "Email should be valid";
     public static final String SUCH_USER_EXISTS = "User with email = {0} already exists";
+    public static final String PASSWORD_SHOULD_PRESENT_AND_NOT_BE_BLANK = "User password should present and " +
+            "shouldn't be blank";
 }
