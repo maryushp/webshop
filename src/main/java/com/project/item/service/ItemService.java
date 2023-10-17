@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
@@ -88,5 +89,14 @@ public class ItemService implements CrudItemService {
         if (!itemRepository.existsById(id))
             throw new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id));
         itemRepository.deleteById(id);
+    }
+
+    public List<Item> getExistedItems(List<Item> items) {
+        ArrayList<Item> existedItems = new ArrayList<>();
+        for (Item item : items) {
+            existedItems.add(itemRepository.getItemByName(item.getName()).orElseThrow(() -> new NoSuchElemException(
+                    MessageFormat.format(ITEM_NOT_FOUND_NAME, item.getName()))));
+        }
+        return existedItems;
     }
 }

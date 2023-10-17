@@ -4,6 +4,8 @@ import com.project.category.model.Category;
 import com.project.category.model.CategoryDTO;
 import com.project.item.model.Item;
 import com.project.item.model.ItemDTO;
+import com.project.order.model.Order;
+import com.project.order.model.OrderDTO;
 import com.project.user.model.User;
 import com.project.user.model.UserDTO;
 import org.mapstruct.Mapper;
@@ -18,4 +20,7 @@ public interface EntityDtoMapper {
 
     UserDTO toUserDTO(User user);
     User toUser(UserDTO userDTO);
+
+    OrderDTO toOrderDTO(Order order);
+    Order toOrder(OrderDTO orderDTO);
 }

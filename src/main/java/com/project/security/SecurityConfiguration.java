@@ -25,7 +25,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/order/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/order").hasAuthority("USER")
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/**").hasAuthority("ADMIN")
