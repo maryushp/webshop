@@ -64,6 +64,11 @@ public class ItemService implements CrudItemService {
                 ));
     }
 
+    public Page<ItemDTO> getByCategories(List<Long> catIds, Pageable pageable) {
+        Page<Item> itemsByCategories = itemRepository.findByCategoriesIdIn(catIds, pageable);
+        return itemsByCategories.map(entityDtoMapper::toItemDTO);
+    }
+
     @Override
     @Transactional
     public ItemDTO update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/item")
@@ -35,6 +36,12 @@ public class ItemController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ItemDTO> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(itemService.get(id));
+    }
+
+    @GetMapping({"/search/by-categories"})
+    public ResponseEntity<Page<ItemDTO>> getByCategories(@RequestBody List<Long> catIds,
+                                                         @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(itemService.getByCategories(catIds, pageable));
     }
 
     @PatchMapping(value = "/{id}")
