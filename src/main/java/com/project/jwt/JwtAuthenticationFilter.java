@@ -1,4 +1,4 @@
-package com.project.security;
+package com.project.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
