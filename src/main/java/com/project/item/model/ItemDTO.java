@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ItemDTO {
     private String name;
     @NotNull(message = ITEM_PRICE_SHOULD_PRESENT)
     @Positive(message = ITEM_PRICE_SHOULD_BE_POSITIVE)
-    private Double price;
+    private BigDecimal price;
     @Size(max = 500, message = ITEM_DESCRIPTION_SHOULD_BE_LESS_THAN_500_CHARS)
     @NotNull(message = ITEM_DESCRIPTION_SHOULD_PRESENT)
     private String description;

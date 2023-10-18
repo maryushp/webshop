@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,7 +49,7 @@ public class OrderService implements CrudOrderService {
 
         order.setCreationDate(LocalDateTime.now());
 
-        Double cost = order.getItems().stream().map(Item::getPrice).reduce(0.0, Double::sum);
+        BigDecimal cost = order.getItems().stream().map(Item::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
         order.setCost(cost);
 
         return entityDtoMapper.toOrderDTO(orderRepository.save(order));

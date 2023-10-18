@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 @NoArgsConstructor
 public class OrderDTO {
     private Long id;
-    private Double cost;
+    private BigDecimal cost;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
     private UserDTO user;

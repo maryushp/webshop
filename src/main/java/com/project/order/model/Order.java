@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +25,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double cost;
+    private BigDecimal cost;
     @CreatedDate
     @Column(name = "creation_date")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
