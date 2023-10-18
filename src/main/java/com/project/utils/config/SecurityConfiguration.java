@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private static final String ADMIN ="ADMIN";
+    private static final String USER ="USER";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,13 +29,13 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/order/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/order").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.GET, "/user/**").hasAuthority(ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/order/**").hasAuthority(ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/order").hasAuthority(USER)
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/**").hasAuthority(ADMIN)
+                        .requestMatchers(HttpMethod.PATCH, "/**").hasAuthority(ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, "/**").hasAuthority(ADMIN)
 
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
