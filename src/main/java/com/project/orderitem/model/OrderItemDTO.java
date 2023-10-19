@@ -6,12 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import jakarta.validation.constraints.Positive;
+
+import static com.project.utils.exceptionhandler.ExceptionMessages.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderItemDTO {
-    @NotNull
+    @NotNull(message = ITEM_SHOULD_PRESENT)
     private ItemDTO item;
-    @NotNull
+    @NotNull(message = AMOUNT_SHOULD_PRESENT)
+    @Positive(message = AMOUNT_SHOULD_BE_POSITIVE)
     private int amount;
 }

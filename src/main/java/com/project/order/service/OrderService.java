@@ -7,6 +7,7 @@ import com.project.item.model.Item;
 import com.project.item.repository.ItemRepository;
 import com.project.order.model.Order;
 import com.project.order.model.OrderDTO;
+import com.project.order.model.OrderRequest;
 import com.project.order.repository.OrderRepository;
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
@@ -46,7 +47,9 @@ public class OrderService implements CrudOrderService {
 
     @Override
     @Transactional
-    public OrderDTO create(Set<OrderItemDTO> orderItems) {
+    public OrderDTO create(OrderRequest orderRequest) {
+        Set<OrderItemDTO> orderItems = orderRequest.getOrderItems();
+
         Set<OrderItem> orderItemSet = orderItems.stream().map(entityDtoMapper::toOrderItem).collect(Collectors.toSet());
 
         Map<Item, Integer> orderMap = makeOrderMap(orderItemSet);
