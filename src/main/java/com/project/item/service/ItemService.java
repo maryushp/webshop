@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -95,14 +94,5 @@ public class ItemService implements CrudItemService {
         if (!itemRepository.existsById(id))
             throw new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id));
         itemRepository.deleteById(id);
-    }
-
-    public Set<Item> getExistedItems(Set<Item> items) {
-        HashSet<Item> existedItems = new HashSet<>();
-        for (Item item : items) {
-            existedItems.add(itemRepository.getItemByName(item.getName()).orElseThrow(() -> new NoSuchElemException(
-                    MessageFormat.format(ITEM_NOT_FOUND_NAME, item.getName()))));
-        }
-        return existedItems;
     }
 }

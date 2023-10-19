@@ -1,7 +1,7 @@
 package com.project.order.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.item.model.Item;
+import com.project.orderitem.model.OrderItem;
 import com.project.user.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
@@ -21,6 +21,7 @@ import java.util.Set;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +34,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @ManyToMany
+    @OneToMany(mappedBy = "order")
     @ToString.Exclude
-    @JoinTable(name = "_order_has_item", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "item_id"))
-    private Set<Item> items;
+    private Set<OrderItem> orderItems;
 
     @Override
     public boolean equals(Object obj) {

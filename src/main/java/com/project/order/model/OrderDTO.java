@@ -1,7 +1,7 @@
 package com.project.order.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.item.model.ItemDTO;
+import com.project.orderitem.model.OrderItemDTO;
 import com.project.user.model.UserDTO;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -24,5 +24,5 @@ public class OrderDTO {
     private LocalDateTime creationDate;
     private UserDTO user;
     @NotEmpty(message = ORDER_MUST_HAVE_ITEMS)
-    private Set<ItemDTO> items;
+    private Set<OrderItemDTO> orderItems;
 }

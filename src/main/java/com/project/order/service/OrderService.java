@@ -4,12 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.item.model.Item;
-import com.project.item.service.ItemService;
+import com.project.item.repository.ItemRepository;
 import com.project.order.model.Order;
 import com.project.order.model.OrderDTO;
 import com.project.order.repository.OrderRepository;
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
+import com.project.orderitem.model.OrderItem;
+import com.project.orderitem.model.OrderItemDTO;
+import com.project.orderitem.model.OrderItemPK;
+import com.project.orderitem.repository.OrderItemRepository;
 import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.repository.UserRepository;
@@ -26,35 +30,41 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService implements CrudOrderService {
     private final OrderRepository orderRepository;
     private final EntityDtoMapper entityDtoMapper;
-    private final ItemService itemService;
+    private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Override
     @Transactional
-    public OrderDTO create(OrderDTO orderDto) {
-        Order order = entityDtoMapper.toOrder(orderDto);
+    public OrderDTO create(Set<OrderItemDTO> orderItems) {
+        Set<OrderItem> orderItemSet = orderItems.stream().map(entityDtoMapper::toOrderItem).collect(Collectors.toSet());
 
-        Set<Item> actualItems = order.getItems();
-        order.setItems(itemService.getExistedItems(actualItems));
+        Map<Item, Integer> orderMap = makeOrderMap(orderItemSet);
+        LocalDateTime dateNow = LocalDateTime.now();
 
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User dbUser = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND, currentUser.getId())));
-        order.setUser(dbUser);
 
-        order.setCreationDate(LocalDateTime.now());
-
-        BigDecimal cost = order.getItems().stream().map(Item::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
-        order.setCost(cost);
-
-        return entityDtoMapper.toOrderDTO(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(
+                Order.builder()
+                        .user(dbUser)
+                        .cost(countOrderCost(orderMap))
+                        .creationDate(dateNow)
+                        .build());
+        Set<OrderItem> savedOrderItems = createOrderItemSet(orderMap, savedOrder);
+        savedOrder.setOrderItems(savedOrderItems);
+        return entityDtoMapper.toOrderDTO(savedOrder);
     }
 
     @Override
@@ -91,5 +101,39 @@ public class OrderService implements CrudOrderService {
             throw new NoSuchElemException(MessageFormat.format(ORDER_NOT_FOUND, id));
         }
         orderRepository.deleteById(id);
+    }
+
+    private Map<Item, Integer> makeOrderMap(Set<OrderItem> orderItems) {
+        Map<Item, Integer> orderMap = new HashMap<>();
+
+        for (OrderItem orderItem: orderItems) {
+            Item item =
+                    itemRepository.findById(orderItem.getItem().getId())
+                            .orElseThrow(() ->
+                                    new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, orderItem.getItem().getId())));
+            orderMap.put(item, orderItem.getAmount());
+        }
+        return orderMap;
+    }
+
+    private BigDecimal countOrderCost(Map<Item, Integer> orderMap) {
+        BigDecimal cost = BigDecimal.ZERO;
+        for (Map.Entry<Item, Integer> entry: orderMap.entrySet()) {
+            Item item = entry.getKey();
+            Integer amount = entry.getValue();
+            BigDecimal entryCost = item.getPrice().multiply(BigDecimal.valueOf(amount));
+            cost = cost.add(entryCost);
+        }
+        return cost;
+    }
+
+    private Set<OrderItem> createOrderItemSet(Map<Item, Integer> orderMap, Order dbOrder) {
+        return orderMap.entrySet().stream().map(entry -> {
+            Item item = entry.getKey();
+            Integer amount = entry.getValue();
+            OrderItemPK orderItemPK = new OrderItemPK(dbOrder.getId(), item.getId());
+            return orderItemRepository.save(
+                    new OrderItem(orderItemPK, dbOrder, item, amount));
+        }).collect(Collectors.toSet());
     }
 }
