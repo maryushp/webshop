@@ -38,7 +38,7 @@ public class ItemController {
         return ResponseEntity.ok(itemService.get(id));
     }
 
-    @GetMapping({"/search/by-categories"})
+    @GetMapping("/search/by-categories")
     public ResponseEntity<Page<ItemDTO>> getByCategories(@RequestBody List<Long> catIds,
                                                          @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(itemService.getByCategories(catIds, pageable));
