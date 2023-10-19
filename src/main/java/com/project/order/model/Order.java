@@ -11,8 +11,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "_order")
@@ -36,7 +36,7 @@ public class Order {
     @ManyToMany
     @ToString.Exclude
     @JoinTable(name = "_order_has_item", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "item_id"))
-    private List<Item> items;
+    private Set<Item> items;
 
     @Override
     public boolean equals(Object obj) {

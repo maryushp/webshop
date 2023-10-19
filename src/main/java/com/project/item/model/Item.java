@@ -9,8 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "item")
@@ -34,7 +34,7 @@ public class Item {
     @ToString.Exclude
     @JoinTable(name = "item_has_category", joinColumns = @JoinColumn(name = "item_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<Category> categories;
+    private Set<Category> categories;
 
     @Override
     public boolean equals(Object obj) {

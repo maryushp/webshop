@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
@@ -81,8 +81,8 @@ public class CategoryService implements CrudCategoryService {
         categoryRepository.deleteById(id);
     }
 
-    public List<Category> getExistedCategories(List<Category> categories) {
-        ArrayList<Category> existedCategories = new ArrayList<>();
+    public Set<Category> getExistedCategories(Set<Category> categories) {
+        HashSet<Category> existedCategories = new HashSet<>();
         for (Category cat : categories) {
             existedCategories.add(categoryRepository.getCategoryByName(cat.getName()).orElseThrow(() -> new NoSuchElemException(
                     MessageFormat.format(CATEGORY_NOT_FOUND_NAME, cat.getName()))));

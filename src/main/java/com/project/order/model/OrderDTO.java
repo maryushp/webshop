@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
@@ -24,5 +24,5 @@ public class OrderDTO {
     private LocalDateTime creationDate;
     private UserDTO user;
     @NotEmpty(message = ORDER_MUST_HAVE_ITEMS)
-    private List<ItemDTO> items;
+    private Set<ItemDTO> items;
 }

@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +41,7 @@ public class OrderService implements CrudOrderService {
     public OrderDTO create(OrderDTO orderDto) {
         Order order = entityDtoMapper.toOrder(orderDto);
 
-        List<Item> actualItems = order.getItems();
+        Set<Item> actualItems = order.getItems();
         order.setItems(itemService.getExistedItems(actualItems));
 
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

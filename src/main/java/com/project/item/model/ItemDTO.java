@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -30,5 +30,5 @@ public class ItemDTO {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
     @NotEmpty(message = ITEM_SHOULD_HAVE_AT_LEAST_1_CATEGORY)
-    private List<CategoryDTO> categories;
+    private Set<CategoryDTO> categories;
 }

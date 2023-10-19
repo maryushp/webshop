@@ -23,8 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
@@ -44,7 +45,7 @@ public class ItemService implements CrudItemService {
             throw new SuchElementAlreadyExists(MessageFormat.format(ITEM_ALREADY_EXISTS, item.getName()));
         }
 
-        List<Category> actualCategories = item.getCategories();
+        Set<Category> actualCategories = item.getCategories();
         item.setCategories(categoryService.getExistedCategories(actualCategories));
 
         item.setCreationDate(LocalDateTime.now());
@@ -96,8 +97,8 @@ public class ItemService implements CrudItemService {
         itemRepository.deleteById(id);
     }
 
-    public List<Item> getExistedItems(List<Item> items) {
-        ArrayList<Item> existedItems = new ArrayList<>();
+    public Set<Item> getExistedItems(Set<Item> items) {
+        HashSet<Item> existedItems = new HashSet<>();
         for (Item item : items) {
             existedItems.add(itemRepository.getItemByName(item.getName()).orElseThrow(() -> new NoSuchElemException(
                     MessageFormat.format(ITEM_NOT_FOUND_NAME, item.getName()))));
