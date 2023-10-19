@@ -29,6 +29,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user/*/orders").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/user/**").hasAuthority(ADMIN)
                         .requestMatchers(HttpMethod.GET, "/order/**").hasAuthority(ADMIN)
                         .requestMatchers(HttpMethod.POST, "/order").hasAuthority(USER)

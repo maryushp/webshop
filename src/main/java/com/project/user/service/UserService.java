@@ -1,5 +1,7 @@
 package com.project.user.service;
 
+import com.project.order.model.OrderDTO;
+import com.project.order.service.OrderService;
 import com.project.user.model.UserDTO;
 import com.project.user.repository.UserRepository;
 import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
@@ -18,6 +20,7 @@ import static com.project.utils.exceptionhandler.ExceptionMessages.USER_NOT_FOUN
 public class UserService implements CrudUserService{
     private final UserRepository userRepository;
     private final EntityDtoMapper entityDtoMapper;
+    private final OrderService orderService;
 
     @Override
     public Page<UserDTO> getAll(Pageable pageable) {
@@ -29,5 +32,9 @@ public class UserService implements CrudUserService{
         return entityDtoMapper.toUserDTO(userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND, id))
                 ));
+    }
+
+    public Page<OrderDTO> getOrders(Long id, Pageable pageable) {
+        return orderService.getByUser(id, pageable);
     }
 }

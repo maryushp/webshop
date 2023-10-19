@@ -10,6 +10,7 @@ import com.project.order.model.OrderDTO;
 import com.project.order.repository.OrderRepository;
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
+import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.repository.UserRepository;
 import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
@@ -17,6 +18,7 @@ import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +67,16 @@ public class OrderService implements CrudOrderService {
         return entityDtoMapper.toOrderDTO(orderRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ORDER_NOT_FOUND, id))
                 ));
+    }
+
+    public Page<OrderDTO> getByUser(Long id, Pageable pageable) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (currentUser.getRole().equals(Role.ADMIN) || id.equals(currentUser.getId())) {
+            return orderRepository.findByUserId(id, pageable).map(entityDtoMapper::toOrderDTO);
+        }
+
+        throw new AccessDeniedException(FORBIDDEN);
     }
 
     @Override

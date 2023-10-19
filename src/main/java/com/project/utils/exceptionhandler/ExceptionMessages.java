@@ -33,4 +33,5 @@ public final class ExceptionMessages {
     public static final String SUCH_USER_EXISTS = "User with email = {0} already exists";
     public static final String PASSWORD_SHOULD_PRESENT_AND_NOT_BE_BLANK = "User password should present and " +
             "shouldn't be blank";
+    public static final String FORBIDDEN = "Forbidden";
 }

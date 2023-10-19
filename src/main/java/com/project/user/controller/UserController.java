@@ -1,5 +1,6 @@
 package com.project.user.controller;
 
+import com.project.order.model.OrderDTO;
 import com.project.user.model.UserDTO;
 import com.project.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,11 @@ public class UserController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.get(id));
+    }
+
+    @GetMapping(value = "/{id}/orders")
+    public ResponseEntity<Page<OrderDTO>> getUserOrders(@PathVariable("id") Long id,
+                                                        @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(userService.getOrders(id, pageable));
     }
 }
