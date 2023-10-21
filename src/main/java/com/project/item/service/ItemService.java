@@ -1,6 +1,5 @@
 package com.project.item.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -20,7 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,7 +38,7 @@ public class ItemService implements CrudItemService {
 
     @Override
     @Transactional
-    public ItemDTO create(ItemDTO itemDto) {
+    public ItemDTO create(ItemDTO itemDto, MultipartFile image) throws IOException {
         Item item = entityDtoMapper.toItem(itemDto);
 
         if (itemRepository.exists(Example.of(item))) {
@@ -49,6 +50,8 @@ public class ItemService implements CrudItemService {
 
         item.setCreationDate(LocalDateTime.now());
 
+        item.setImageData(image.getBytes());
+
         return entityDtoMapper.toItemDTO(itemRepository.save(item));
     }
 
@@ -59,9 +62,12 @@ public class ItemService implements CrudItemService {
 
     @Override
     public ItemDTO get(Long id) {
-        return entityDtoMapper.toItemDTO(itemRepository.findById(id)
+        ItemDTO item = entityDtoMapper.toItemDTO(itemRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id))
                 ));
+
+        item.setImageData((item.getImageData()));
+        return item;
     }
 
     public Page<ItemDTO> getByCategories(List<Long> catIds, Pageable pageable) {
@@ -71,20 +77,24 @@ public class ItemService implements CrudItemService {
 
     @Override
     @Transactional
-    public ItemDTO update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+    public ItemDTO update(Long id, JsonMergePatch patch, MultipartFile image) throws JsonPatchException, IOException {
         Item dbItem =
                 itemRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id)));
+        if (patch != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModules(new JavaTimeModule());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModules(new JavaTimeModule());
+            JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbItem, JsonNode.class));
+            Item updatedItem = objectMapper.treeToValue(updatedJson, Item.class);
 
-        JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbItem, JsonNode.class));
-        Item updatedItem = objectMapper.treeToValue(updatedJson, Item.class);
-
-        dbItem.setName(updatedItem.getName());
-        dbItem.setPrice(updatedItem.getPrice());
-        dbItem.setDescription(updatedItem.getDescription());
-        dbItem.setCategories(updatedItem.getCategories());
+            dbItem.setName(updatedItem.getName());
+            dbItem.setPrice(updatedItem.getPrice());
+            dbItem.setDescription(updatedItem.getDescription());
+            dbItem.setCategories(updatedItem.getCategories());
+        }
+        if (image != null) {
+            dbItem.setImageData(image.getBytes());
+        }
 
         return entityDtoMapper.toItemDTO(itemRepository.save(dbItem));
     }

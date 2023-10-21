@@ -1,18 +1,21 @@
 package com.project.item.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.item.model.ItemDTO;
 import com.project.item.service.ItemService;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -22,9 +25,10 @@ import java.util.List;
 public class ItemController {
     private final ItemService itemService;
 
-    @PostMapping
-    public ResponseEntity<ItemDTO> createItem(@RequestBody @Valid ItemDTO itemDto) {
-        ItemDTO createdItem = itemService.create(itemDto);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ItemDTO> createItem(@RequestParam("image") @Nullable MultipartFile image,
+                                              @RequestPart("item") @Valid ItemDTO itemDto) throws IOException {
+        ItemDTO createdItem = itemService.create(itemDto, image);
         return ResponseEntity.created(URI.create("/item/" + createdItem.getId())).body(createdItem);
     }
 
@@ -45,8 +49,11 @@ public class ItemController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<ItemDTO> updateCategory(@PathVariable("id") Long id, @RequestBody JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
-        return ResponseEntity.ok(itemService.update(id, patch));
+    public ResponseEntity<ItemDTO> updateCategory(@PathVariable("id") Long id,
+                                                  @RequestPart("patch") @ Nullable JsonMergePatch patch,
+                                                  @RequestParam("image") @Nullable MultipartFile image) throws JsonPatchException,
+            IOException {
+        return ResponseEntity.ok(itemService.update(id, patch, image));
     }
 
     @DeleteMapping(value = "/{id}")

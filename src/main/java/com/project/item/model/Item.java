@@ -30,6 +30,9 @@ public class Item {
     @Column(name = "creation_date")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
+    @Lob
+    @Column(name = "image", length = 1000)
+    private byte[] imageData;
     @ManyToMany
     @ToString.Exclude
     @JoinTable(name = "item_has_category", joinColumns = @JoinColumn(name = "item_id"),

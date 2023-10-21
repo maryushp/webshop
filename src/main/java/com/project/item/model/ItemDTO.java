@@ -29,6 +29,7 @@ public class ItemDTO {
     private String description;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
+    private byte[] imageData;
     @NotEmpty(message = ITEM_SHOULD_HAVE_AT_LEAST_1_CATEGORY)
     private Set<CategoryDTO> categories;
 }
