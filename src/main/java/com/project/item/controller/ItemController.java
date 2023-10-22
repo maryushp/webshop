@@ -48,6 +48,12 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getByCategories(catIds, pageable));
     }
 
+    @GetMapping("/search/by-name")
+    public ResponseEntity<Page<ItemDTO>> getItemsByPartialName(@RequestParam("name") String partialName,
+                                                               @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(itemService.getItemByPartialName(partialName, pageable));
+    }
+
     @PatchMapping(value = "/{id}")
     public ResponseEntity<ItemDTO> updateCategory(@PathVariable("id") Long id,
                                                   @RequestPart("patch") @ Nullable JsonMergePatch patch,

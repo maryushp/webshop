@@ -75,6 +75,22 @@ public class ItemService implements CrudItemService {
         return itemsByCategories.map(entityDtoMapper::toItemDTO);
     }
 
+    public Page<ItemDTO> getItemByPartialName(String partialName, Pageable pageable) {
+        if (partialName == null || partialName.isEmpty()) {
+            throw new NoSuchElemException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
+        }
+
+        Page<Item> items = itemRepository.findByNameContaining(partialName, pageable);
+
+
+        if (items.isEmpty()) {
+            throw new NoSuchElemException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
+        }
+
+        return items.map(entityDtoMapper::toItemDTO);
+
+    }
+
     @Override
     @Transactional
     public ItemDTO update(Long id, JsonMergePatch patch, MultipartFile image) throws JsonPatchException, IOException {

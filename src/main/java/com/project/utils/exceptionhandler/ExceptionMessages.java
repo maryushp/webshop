@@ -37,4 +37,6 @@ public final class ExceptionMessages {
     public static final String AMOUNT_SHOULD_PRESENT = "Amount should present";
     public static final String ITEM_SHOULD_PRESENT = "Item should present";
     public static final String ORDER_ITEMS_SHOULD_PRESENT = "Order items should present";
+
+    public static final String ITEM_BY_PART_NOT_FOUND = "Item with partial name = {0} not found";
 }

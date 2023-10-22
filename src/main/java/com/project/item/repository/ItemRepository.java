@@ -7,11 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    Optional<Item> getItemByName(String name);
+    Page<Item> findByNameContaining(String partialName, Pageable pageable);
 
     Page<Item> findByCategoriesIdIn(List<Long> catIds, Pageable pageable);
 }
