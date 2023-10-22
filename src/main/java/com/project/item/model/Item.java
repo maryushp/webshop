@@ -33,6 +33,8 @@ public class Item {
     @Lob
     @Column(name = "image", length = 1000)
     private byte[] imageData;
+    @Column(name="long_description")
+    private String longDescription;
     @ManyToMany
     @ToString.Exclude
     @JoinTable(name = "item_has_category", joinColumns = @JoinColumn(name = "item_id"),

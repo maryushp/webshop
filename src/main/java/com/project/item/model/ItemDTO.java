@@ -24,12 +24,14 @@ public class ItemDTO {
     @NotNull(message = ITEM_PRICE_SHOULD_PRESENT)
     @Positive(message = ITEM_PRICE_SHOULD_BE_POSITIVE)
     private BigDecimal price;
-    @Size(max = 500, message = ITEM_DESCRIPTION_SHOULD_BE_LESS_THAN_500_CHARS)
+    @Size(max = 255, message = ITEM_DESCRIPTION_SHOULD_BE_LESS_THAN_500_CHARS)
     @NotNull(message = ITEM_DESCRIPTION_SHOULD_PRESENT)
     private String description;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
     private byte[] imageData;
+    @NotNull(message = ITEM_DESCRIPTION_SHOULD_PRESENT)
+    private String longDescription;
     @NotEmpty(message = ITEM_SHOULD_HAVE_AT_LEAST_1_CATEGORY)
     private Set<CategoryDTO> categories;
 }
