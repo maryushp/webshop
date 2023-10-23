@@ -26,7 +26,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ItemDTO> createItem(@RequestParam("image") @Nullable MultipartFile image,
+    public ResponseEntity<ItemDTO> createItem(@RequestPart("image") @Nullable MultipartFile image,
                                               @RequestPart("item") @Valid ItemDTO itemDto) throws IOException {
         ItemDTO createdItem = itemService.create(itemDto, image);
         return ResponseEntity.created(URI.create("/item/" + createdItem.getId())).body(createdItem);
@@ -43,7 +43,7 @@ public class ItemController {
     }
 
     @GetMapping("/search/by-categories")
-    public ResponseEntity<Page<ItemDTO>> getByCategories(@RequestBody List<Long> catIds,
+    public ResponseEntity<Page<ItemDTO>> getByCategories(@RequestParam List<Long> catIds,
                                                          @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(itemService.getByCategories(catIds, pageable));
     }
@@ -56,8 +56,8 @@ public class ItemController {
 
     @PatchMapping(value = "/{id}")
     public ResponseEntity<ItemDTO> updateCategory(@PathVariable("id") Long id,
-                                                  @RequestPart("patch") @ Nullable JsonMergePatch patch,
-                                                  @RequestParam("image") @Nullable MultipartFile image) throws JsonPatchException,
+                                                  @RequestPart("patch") @Nullable JsonMergePatch patch,
+                                                  @RequestPart("image") @Nullable MultipartFile image) throws JsonPatchException,
             IOException {
         return ResponseEntity.ok(itemService.update(id, patch, image));
     }
