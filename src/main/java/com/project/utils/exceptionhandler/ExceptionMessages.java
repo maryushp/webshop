@@ -30,13 +30,12 @@ public final class ExceptionMessages {
     public static final String ORDER_NOT_FOUND = "Order with id = {0} doesn''t exist";
     public static final String EMAIL_SHOULD_BE_VALID = "Email should be valid";
     public static final String SUCH_USER_EXISTS = "User with email = {0} already exists";
-    public static final String PASSWORD_SHOULD_PRESENT_AND_NOT_BE_BLANK = "User password should present and " +
-            "shouldn't be blank";
+    public static final String PASSWORD_SHOULD_PRESENT_AND_NOT_BE_BLANK = "User password should present and shouldn't be blank";
     public static final String FORBIDDEN = "Forbidden";
     public static final String AMOUNT_SHOULD_BE_POSITIVE = "Amount should be positive";
     public static final String AMOUNT_SHOULD_PRESENT = "Amount should present";
     public static final String ITEM_SHOULD_PRESENT = "Item should present";
     public static final String ORDER_ITEMS_SHOULD_PRESENT = "Order items should present";
-
     public static final String ITEM_BY_PART_NOT_FOUND = "Item with partial name = {0} not found";
+    public static final String IMAGE_OR_PATCH_MUST_PRESENT = "At least one parameter (image or patch) must present";
 }

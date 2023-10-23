@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.category.service.CategoryService;
+import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
 import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.category.model.Category;
@@ -94,6 +95,9 @@ public class ItemService implements CrudItemService {
     @Override
     @Transactional
     public ItemDTO update(Long id, JsonMergePatch patch, MultipartFile image) throws JsonPatchException, IOException {
+        if (patch == null && image == null) {
+            throw new InvalidUpdateRequest(IMAGE_OR_PATCH_MUST_PRESENT);
+        }
         Item dbItem =
                 itemRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id)));
         if (patch != null) {
