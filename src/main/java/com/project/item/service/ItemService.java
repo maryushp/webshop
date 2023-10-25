@@ -76,7 +76,7 @@ public class ItemService implements CrudItemService {
         return itemsByCategories.map(entityDtoMapper::toItemDTO);
     }
 
-    public Page<ItemDTO> getItemByPartialName(String partialName, Pageable pageable) {
+    public Page<ItemDTO> getItemsByPartialName(String partialName, Pageable pageable) {
         if (partialName == null || partialName.isEmpty()) {
             throw new NoSuchElemException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
         }

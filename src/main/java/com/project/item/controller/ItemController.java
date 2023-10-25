@@ -51,7 +51,7 @@ public class ItemController {
     @GetMapping("/search/by-name")
     public ResponseEntity<Page<ItemDTO>> getItemsByPartialName(@RequestParam("name") String partialName,
                                                                @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(itemService.getItemByPartialName(partialName, pageable));
+        return ResponseEntity.ok(itemService.getItemsByPartialName(partialName, pageable));
     }
 
     @PatchMapping(value = "/{id}")
