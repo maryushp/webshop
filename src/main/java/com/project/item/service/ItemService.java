@@ -110,7 +110,7 @@ public class ItemService implements CrudItemService {
             dbItem.setName(updatedItem.getName());
             dbItem.setPrice(updatedItem.getPrice());
             dbItem.setDescription(updatedItem.getDescription());
-            dbItem.setCategories(updatedItem.getCategories());
+            dbItem.setCategories(categoryService.getExistedCategories(updatedItem.getCategories()));
             dbItem.setLongDescription(updatedItem.getLongDescription());
         }
         if (image != null) {
