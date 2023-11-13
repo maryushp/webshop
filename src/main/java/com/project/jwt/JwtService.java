@@ -9,8 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -23,29 +24,43 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(Map.of("Type", "Access"), userDetails, 5, ChronoUnit.MINUTES);
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(Map.of("Type", "Refresh"), userDetails, 2, ChronoUnit.HOURS);
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String email = extractUsername(token);
+        return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    public boolean isRefreshToken(String token) {
+        return "Refresh".equals(extractType(token));
+    }
+
+    private String extractType(String token) {
+        return extractClaim(token, claims -> claims.get("Type", String.class));
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extraxtAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
-
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, int timeAmount,
+                                 ChronoUnit chronoUnit) {
+        Instant now = Instant.now();
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plus(timeAmount, chronoUnit)))
                 .signWith(getSignInKey())
                 .compact();
-    }
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

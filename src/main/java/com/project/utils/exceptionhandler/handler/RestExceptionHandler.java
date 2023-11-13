@@ -1,5 +1,6 @@
 package com.project.utils.exceptionhandler.handler;
 
+import com.project.utils.exceptionhandler.exceptions.InvalidTokenException;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
 import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
@@ -41,8 +42,8 @@ public class RestExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Problem> badCredentialsException(BadCredentialsException ex) {
+    @ExceptionHandler({BadCredentialsException.class, InvalidTokenException.class})
+    public ResponseEntity<Problem> badCredentialsException(Exception ex) {
         Problem problem =
                 Problem.builder().withTitle("Unauthorized").withStatus(Status.UNAUTHORIZED).withDetail(ex.getMessage()).build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(problem);

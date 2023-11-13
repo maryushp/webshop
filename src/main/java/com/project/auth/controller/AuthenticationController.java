@@ -4,6 +4,9 @@ import com.project.auth.model.AuthenticationRequest;
 import com.project.auth.model.AuthenticationResponse;
 import com.project.auth.model.RegisterRequest;
 import com.project.auth.service.AuthenticationService;
+import com.project.utils.exceptionhandler.exceptions.InvalidTokenException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +29,19 @@ public class AuthenticationController {
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        final String jwt;
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+            throw new InvalidTokenException("Refresh request should contain refresh token.");
+        }
+        jwt = bearerToken.substring(7);
+        String token = authService.refreshToken(jwt);
+        response.setHeader("Authorization",
+                "Bearer " + token);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             userEmail = jwtService.extractUsername(jwt);
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailService.loadUserByUsername(userEmail);
-                if (jwtService.isTokenValid(jwt, userDetails)) {
+                if (isEndpointAllowed(request) || (jwtService.isTokenValid(jwt, userDetails) && !jwtService.isRefreshToken(jwt))) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
@@ -52,6 +52,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    return;
                 }
             }
             filterChain.doFilter(request, response);
@@ -60,5 +63,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.getWriter().write(e.getMessage());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         }
+    }
+
+    private boolean isEndpointAllowed(HttpServletRequest request) {
+        return request.getRequestURI().equals("/auth/refresh-token");
     }
 }

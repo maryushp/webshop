@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/refresh-token").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/*/orders").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/user/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/order/**").hasAuthority(ADMIN)

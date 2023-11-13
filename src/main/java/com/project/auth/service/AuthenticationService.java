@@ -7,10 +7,13 @@ import com.project.jwt.JwtService;
 import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.repository.UserRepository;
+import com.project.utils.exceptionhandler.exceptions.InvalidTokenException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailService;
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
@@ -42,9 +46,11 @@ public class AuthenticationService {
         }
 
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtAccessToken = jwtService.generateAccessToken(user);
+        var jwtRefreshToken = jwtService.generateRefreshToken(user);
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .accessToken(jwtAccessToken)
+                .refreshToken(jwtRefreshToken)
                 .id(user.getId())
                 .build();
     }
@@ -52,10 +58,24 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        var jwtAccessToken = jwtService.generateAccessToken(user);
+        var jwtRefreshToken = jwtService.generateRefreshToken(user);
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .accessToken(jwtAccessToken)
+                .refreshToken(jwtRefreshToken)
                 .id(user.getId())
                 .build();
+    }
+
+    public String refreshToken(String jwt) {
+        String userEmail = jwtService.extractUsername(jwt);
+        if (userEmail == null) {
+            throw new InvalidTokenException("Invalid username in refresh token.");
+        }
+        UserDetails userDetails = this.userDetailService.loadUserByUsername(userEmail);
+        if (!jwtService.isTokenValid(jwt, userDetails)) {
+            throw new InvalidTokenException("Invalid refresh token");
+        }
+        return jwtService.generateAccessToken(userDetails);
     }
 }
