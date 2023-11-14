@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.zalando.problem.Status;
 
 import java.io.IOException;
 
@@ -59,8 +61,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
+            JSONObject errorJson = new JSONObject();
+            errorJson.put("title", "Token Expiration");
+            errorJson.put("status", Status.UNAUTHORIZED);
+            errorJson.put("detail", e.getMessage());
+
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(e.getMessage());
+            response.getWriter().write(errorJson.toString());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         }
     }
