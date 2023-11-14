@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/user/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/order/**").hasAuthority(ADMIN)
                         .requestMatchers(HttpMethod.POST, "/order").hasAuthority(USER)
+                        .requestMatchers(HttpMethod.PATCH, "/user/**").hasAuthority(USER)
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").hasAuthority(ADMIN)
                         .requestMatchers(HttpMethod.PATCH, "/**").hasAuthority(ADMIN)

@@ -1,5 +1,6 @@
 package com.project.user.controller;
 
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.order.model.OrderDTO;
 import com.project.user.model.UserDTO;
 import com.project.user.service.UserService;
@@ -8,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -34,4 +32,10 @@ public class UserController {
                                                         @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(userService.getOrders(id, pageable));
     }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") Long id, @RequestBody JsonMergePatch patch) {
+        return ResponseEntity.ok(userService.update(id, patch));
+    }
+
 }

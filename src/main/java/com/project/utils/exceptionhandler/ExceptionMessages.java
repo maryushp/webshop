@@ -38,4 +38,5 @@ public final class ExceptionMessages {
     public static final String ORDER_ITEMS_SHOULD_PRESENT = "Order items should present";
     public static final String ITEM_BY_PART_NOT_FOUND = "Item with partial name = {0} not found";
     public static final String IMAGE_OR_PATCH_MUST_PRESENT = "At least one parameter (image or patch) must present";
+    public static final String INVALID_USER_UPDATE = "Invalid user update request!";
 }
