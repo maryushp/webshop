@@ -43,7 +43,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler({BadCredentialsException.class, InvalidTokenException.class})
-    public ResponseEntity<Problem> badCredentialsException(Exception ex) {
+    public ResponseEntity<Problem> handleUnauthorizedException(RuntimeException ex) {
         Problem problem =
                 Problem.builder().withTitle("Unauthorized").withStatus(Status.UNAUTHORIZED).withDetail(ex.getMessage()).build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(problem);
