@@ -70,11 +70,11 @@ public class AuthenticationService {
     public String refreshToken(String jwt) {
         String userEmail = jwtService.extractUsername(jwt);
         if (userEmail == null) {
-            throw new InvalidTokenException("Invalid username in refresh token.");
+            throw new InvalidTokenException(INVALID_USERNAME);
         }
         UserDetails userDetails = this.userDetailService.loadUserByUsername(userEmail);
         if (!jwtService.isTokenValid(jwt, userDetails)) {
-            throw new InvalidTokenException("Invalid refresh token");
+            throw new InvalidTokenException(INVALID_REFRESH_TOKEN);
         }
         return jwtService.generateAccessToken(userDetails);
     }
