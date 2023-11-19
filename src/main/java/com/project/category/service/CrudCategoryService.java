@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CrudCategoryService {
+    CategoryDTO create(CategoryDTO categoryDto);
+
     Page<CategoryDTO> getAll(Pageable pageable);
 
     CategoryDTO get(Long id);
-
-    CategoryDTO create(CategoryDTO categoryDto);
 
     CategoryDTO update(Long id, JsonMergePatch patch);
 
