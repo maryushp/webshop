@@ -29,7 +29,7 @@ public final class ExceptionMessages {
     public static final String USER_SURNAME_SHOULD_PRESENT_AND_NOT_BLANK = "User surname should present and shouldn't be blank";
     public static final String PASSWORD_SHOULD_PRESENT_AND_NOT_BE_BLANK = "User password should present and shouldn't be blank";
     public static final String USER_NOT_FOUND = "User with id = {0} doesn''t exist";
-    public static final String INVALID_USER_UPDATE = "Invalid user update request!";
+    public static final String INVALID_USER_UPDATE = "Invalid user update request";
     public static final String SUCH_USER_EXISTS = "User with email = {0} already exists";
     public static final String EMAIL_SHOULD_BE_VALID = "Email should be valid";
     public static final String ORDER_MUST_HAVE_ITEMS = "Order must have items";
@@ -38,8 +38,8 @@ public final class ExceptionMessages {
     public static final String INVALID_ENTITY = "Entity is invalid, check your params";
     public static final String AMOUNT_SHOULD_BE_POSITIVE = "Amount should be positive";
     public static final String AMOUNT_SHOULD_PRESENT = "Amount should present";
-    public static final String REQUEST_SHOULD_CONTAIN_TOKEN = "Refresh request should contain refresh token.";
-    public static final String INVALID_USERNAME = "Invalid username in refresh token.";
+    public static final String REQUEST_SHOULD_CONTAIN_TOKEN = "Refresh request should contain refresh token";
+    public static final String INVALID_USERNAME = "Invalid username in refresh token";
     public static final String INVALID_REFRESH_TOKEN = "Invalid refresh token";
     public static final String FORBIDDEN = "Forbidden";
 }
