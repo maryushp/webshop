@@ -1,23 +1,25 @@
 package com.project.item.service;
 
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.item.model.ItemDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
 
 public interface CrudItemService {
+    ItemDTO create(ItemDTO itemDto, MultipartFile image);
+
     Page<ItemDTO> getAll(Pageable pageable);
 
     ItemDTO get(Long id);
 
-    ItemDTO create(ItemDTO itemDto, MultipartFile image) throws IOException;
+    Page<ItemDTO> getByCategories(List<Long> catIds, Pageable pageable);
 
-    ItemDTO update(Long id, JsonMergePatch patch, MultipartFile image) throws JsonPatchException,
-            IOException;
+    Page<ItemDTO> getItemsByPartialName(String partialName, Pageable pageable);
+
+    ItemDTO update(Long id, JsonMergePatch patch, MultipartFile image);
 
     void delete(Long id);
 }
