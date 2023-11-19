@@ -1,8 +1,5 @@
 package com.project.order.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.item.model.Item;
 import com.project.item.repository.ItemRepository;
 import com.project.order.model.Order;
@@ -82,6 +79,7 @@ public class OrderService implements CrudOrderService {
                 ));
     }
 
+    @Override
     public Page<OrderDTO> getByUser(Long id, Pageable pageable) {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -90,12 +88,6 @@ public class OrderService implements CrudOrderService {
         }
 
         throw new AccessDeniedException(FORBIDDEN);
-    }
-
-    @Override
-    @Transactional
-    public OrderDTO update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
-        throw new UnsupportedOperationException();
     }
 
     @Override
