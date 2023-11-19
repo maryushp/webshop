@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
 import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.category.model.Category;
@@ -57,14 +58,19 @@ public class CategoryService implements CrudCategoryService {
 
     @Override
     @Transactional
-    public CategoryDTO update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+    public CategoryDTO update(Long id, JsonMergePatch patch) {
         Category dbCategory = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElemException(
                 MessageFormat.format(CATEGORY_NOT_FOUND_ID, id)));
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbCategory, JsonNode.class));
-        Category updatedCategory = objectMapper.treeToValue(updatedJson, Category.class);
+        Category updatedCategory;
+        try {
+            JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbCategory, JsonNode.class));
+            updatedCategory = objectMapper.treeToValue(updatedJson, Category.class);
+        } catch(JsonPatchException | JsonProcessingException e) {
+            throw new InvalidUpdateRequest(INVALID_CATEGORY_UPDATE);
+        }
 
         if (categoryRepository.getCategoryByName(updatedCategory.getName()).isPresent())
             throw new SuchElementAlreadyExists(MessageFormat.format(CATEGORY_ALREADY_EXISTS, updatedCategory.getName()));

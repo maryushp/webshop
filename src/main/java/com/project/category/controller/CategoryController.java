@@ -1,7 +1,5 @@
 package com.project.category.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.category.model.CategoryDTO;
 import com.project.category.service.CategoryService;
@@ -38,7 +36,7 @@ public class CategoryController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") Long id, @RequestBody JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") Long id, @RequestBody JsonMergePatch patch) {
         return ResponseEntity.ok(categoryService.update(id, patch));
     }
 

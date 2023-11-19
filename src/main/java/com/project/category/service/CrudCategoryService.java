@@ -1,7 +1,5 @@
 package com.project.category.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.category.model.CategoryDTO;
 import org.springframework.data.domain.Page;
@@ -14,7 +12,7 @@ public interface CrudCategoryService {
 
     CategoryDTO create(CategoryDTO categoryDto);
 
-    CategoryDTO update(Long id, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException;
+    CategoryDTO update(Long id, JsonMergePatch patch);
 
     void delete(Long id);
 }
