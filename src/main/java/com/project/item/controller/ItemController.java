@@ -1,6 +1,5 @@
 package com.project.item.controller;
 
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.item.model.ItemDTO;
 import com.project.item.service.ItemService;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -27,13 +25,13 @@ public class ItemController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ItemDTO> createItem(@RequestPart("image") @Nullable MultipartFile image,
-                                              @RequestPart("item") @Valid ItemDTO itemDto) throws IOException {
+                                              @RequestPart("item") @Valid ItemDTO itemDto) {
         ItemDTO createdItem = itemService.create(itemDto, image);
         return ResponseEntity.created(URI.create("/item/" + createdItem.getId())).body(createdItem);
     }
 
     @GetMapping
-    public ResponseEntity<Page<ItemDTO>> getAll(@PageableDefault Pageable pageable){
+    public ResponseEntity<Page<ItemDTO>> getAll(@PageableDefault Pageable pageable) {
         return ResponseEntity.ok(itemService.getAll(pageable));
     }
 
@@ -57,8 +55,7 @@ public class ItemController {
     @PatchMapping(value = "/{id}")
     public ResponseEntity<ItemDTO> updateCategory(@PathVariable("id") Long id,
                                                   @RequestPart("patch") @Nullable JsonMergePatch patch,
-                                                  @RequestPart("image") @Nullable MultipartFile image) throws JsonPatchException,
-            IOException {
+                                                  @RequestPart("image") @Nullable MultipartFile image) {
         return ResponseEntity.ok(itemService.update(id, patch, image));
     }
 

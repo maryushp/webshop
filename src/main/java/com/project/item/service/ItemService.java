@@ -1,11 +1,13 @@
 package com.project.item.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.category.service.CategoryService;
+import com.project.utils.exceptionhandler.exceptions.InvalidImageException;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
 import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
@@ -39,7 +41,7 @@ public class ItemService implements CrudItemService {
 
     @Override
     @Transactional
-    public ItemDTO create(ItemDTO itemDto, MultipartFile image) throws IOException {
+    public ItemDTO create(ItemDTO itemDto, MultipartFile image) {
         Item item = entityDtoMapper.toItem(itemDto);
 
         if (itemRepository.exists(Example.of(item))) {
@@ -51,7 +53,11 @@ public class ItemService implements CrudItemService {
 
         item.setCreationDate(LocalDateTime.now());
 
-        item.setImageData(image.getBytes());
+        try {
+            item.setImageData(image.getBytes());
+        } catch (IOException e) {
+            throw new InvalidImageException(INVALID_IMAGE);
+        }
 
         return entityDtoMapper.toItemDTO(itemRepository.save(item));
     }
@@ -71,11 +77,13 @@ public class ItemService implements CrudItemService {
         return item;
     }
 
+    @Override
     public Page<ItemDTO> getByCategories(List<Long> catIds, Pageable pageable) {
         Page<Item> itemsByCategories = itemRepository.findByCategoriesIdIn(catIds, pageable);
         return itemsByCategories.map(entityDtoMapper::toItemDTO);
     }
 
+    @Override
     public Page<ItemDTO> getItemsByPartialName(String partialName, Pageable pageable) {
         if (partialName == null || partialName.isEmpty()) {
             throw new NoSuchElemException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
@@ -89,12 +97,11 @@ public class ItemService implements CrudItemService {
         }
 
         return items.map(entityDtoMapper::toItemDTO);
-
     }
 
     @Override
     @Transactional
-    public ItemDTO update(Long id, JsonMergePatch patch, MultipartFile image) throws JsonPatchException, IOException {
+    public ItemDTO update(Long id, JsonMergePatch patch, MultipartFile image) {
         if (patch == null && image == null) {
             throw new InvalidUpdateRequest(IMAGE_OR_PATCH_MUST_PRESENT);
         }
@@ -104,8 +111,13 @@ public class ItemService implements CrudItemService {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModules(new JavaTimeModule());
 
-            JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbItem, JsonNode.class));
-            Item updatedItem = objectMapper.treeToValue(updatedJson, Item.class);
+            Item updatedItem;
+            try {
+                JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbItem, JsonNode.class));
+                updatedItem = objectMapper.treeToValue(updatedJson, Item.class);
+            } catch (JsonPatchException | JsonProcessingException e) {
+                throw new InvalidUpdateRequest(INVALID_ITEM_UPDATE);
+            }
 
             dbItem.setName(updatedItem.getName());
             dbItem.setPrice(updatedItem.getPrice());
@@ -114,7 +126,11 @@ public class ItemService implements CrudItemService {
             dbItem.setLongDescription(updatedItem.getLongDescription());
         }
         if (image != null) {
-            dbItem.setImageData(image.getBytes());
+            try {
+                dbItem.setImageData(image.getBytes());
+            } catch (IOException e) {
+                throw new InvalidImageException(INVALID_IMAGE);
+            }
         }
 
         return entityDtoMapper.toItemDTO(itemRepository.save(dbItem));

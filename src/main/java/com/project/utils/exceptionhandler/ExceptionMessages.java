@@ -21,7 +21,9 @@ public final class ExceptionMessages {
     public static final String ITEM_ALREADY_EXISTS = "Item with name = {0} already exists";
     public static final String ITEM_NOT_FOUND = "Item with id = {0} doesn''t exist";
     public static final String ITEM_SHOULD_PRESENT = "Item should present";
+    public static final String INVALID_IMAGE = "Uploaded image is invalid";
     public static final String IMAGE_OR_PATCH_MUST_PRESENT = "At least one parameter (image or patch) must present";
+    public static final String INVALID_ITEM_UPDATE = "Invalid item update request";
     public static final String USER_EMAIL_SHOULD_BE_LESS_THAN_45_CHARS = "User email should be less than 45 chars";
     public static final String USER_EMAIL_SHOULD_PRESENT_AND_NOT_BLANK = "User email should present and shouldn't be blank";
     public static final String USER_NAME_SHOULD_BE_LESS_THAN_45_CHARS = "User name should be less than 45 chars";
