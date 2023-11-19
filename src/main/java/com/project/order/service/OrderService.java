@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService implements CrudOrderService {
+public class OrderService implements CrdOrderService {
     private final OrderRepository orderRepository;
     private final EntityDtoMapper entityDtoMapper;
     private final ItemRepository itemRepository;

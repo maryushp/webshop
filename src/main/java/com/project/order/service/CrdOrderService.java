@@ -5,7 +5,7 @@ import com.project.order.model.OrderRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface CrudOrderService {
+public interface CrdOrderService {
     OrderDTO create(OrderRequest orderRequest);
 
     Page<OrderDTO> getAll(Pageable pageable);
