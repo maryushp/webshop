@@ -1,9 +1,6 @@
 package com.project.utils.exceptionhandler.handler;
 
-import com.project.utils.exceptionhandler.exceptions.InvalidTokenException;
-import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
-import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
-import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
+import com.project.utils.exceptionhandler.exceptions.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +46,8 @@ public class RestExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(problem);
     }
 
-    @ExceptionHandler(InvalidUpdateRequest.class)
-    public ResponseEntity<Problem> handleInvalidUpdateRequest(InvalidUpdateRequest ex) {
+    @ExceptionHandler({InvalidUpdateRequest.class, InvalidImageException.class})
+    public ResponseEntity<Problem> handleInvalidBadRequest(RuntimeException ex) {
         Problem problem =
                 Problem.builder().withTitle("Bad Request").withStatus(Status.BAD_REQUEST).withDetail(ex.getMessage()).build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
