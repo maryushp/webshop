@@ -21,7 +21,6 @@ public interface EntityDtoMapper {
     Item toItem(ItemDTO itemDTO);
 
     UserDTO toUserDTO(User user);
-    User toUser(UserDTO userDTO);
 
     OrderDTO toOrderDTO(Order order);
 
