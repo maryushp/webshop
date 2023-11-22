@@ -45,4 +45,5 @@ public final class ExceptionMessages {
     public static final String INVALID_USERNAME = "Invalid username in refresh token";
     public static final String INVALID_REFRESH_TOKEN = "Invalid refresh token";
     public static final String FORBIDDEN = "Forbidden";
+    public static final String USER_NOT_FOUND = "User not found";
 }
