@@ -48,6 +48,7 @@ public class UserService implements CrudUserService {
         throw new AccessDeniedException(FORBIDDEN);
     }
 
+    @Override
     public Page<OrderDTO> getOrders(Long id, Pageable pageable) {
         return orderService.getByUser(id, pageable);
     }
