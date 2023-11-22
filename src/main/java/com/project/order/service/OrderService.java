@@ -54,7 +54,7 @@ public class OrderService implements CrdOrderService {
 
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User dbUser = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND, currentUser.getId())));
+                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND_ID, currentUser.getId())));
 
         Order savedOrder = orderRepository.save(
                 Order.builder()

@@ -42,7 +42,7 @@ public class UserService implements CrudUserService {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (currentUser.getRole().equals(Role.ADMIN) || id.equals(currentUser.getId())) {
-            return entityDtoMapper.toUserDTO(userRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND, id))));
+            return entityDtoMapper.toUserDTO(userRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND_ID, id))));
         }
 
         throw new AccessDeniedException(FORBIDDEN);
@@ -63,7 +63,7 @@ public class UserService implements CrudUserService {
 
         User dbUser = userRepository
                 .findById(id)
-                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND, id)));
+                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND_ID, id)));
 
         ObjectMapper objectMapper = new ObjectMapper();
         UserDTO updatedUser;
