@@ -35,15 +35,23 @@ public class AuthenticationController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        return generateResponseWithRefreshedToken(request, response);
+    }
+
+    private ResponseEntity<Void> generateResponseWithRefreshedToken(HttpServletRequest request, HttpServletResponse response) {
         final String jwt;
         String bearerToken = request.getHeader(AUTHORIZATION);
+
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
             throw new InvalidTokenException(REQUEST_SHOULD_CONTAIN_TOKEN);
         }
+
         jwt = bearerToken.substring(7);
-        String token = authService.refreshToken(jwt);
+        String refreshedToken = authService.refreshToken(jwt);
+
         response.setHeader(AUTHORIZATION,
-                "Bearer " + token);
+                "Bearer " + refreshedToken);
+
         return ResponseEntity.noContent().build();
     }
 }
