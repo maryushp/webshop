@@ -3,7 +3,7 @@ package com.project.user.controller;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.order.model.OrderDTO;
 import com.project.user.model.UserDTO;
-import com.project.user.service.UserService;
+import com.project.user.service.DefaultUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final DefaultUserService userService;
 
     @GetMapping
     public ResponseEntity<Page<UserDTO>> getAll(@PageableDefault Pageable pageable) {
