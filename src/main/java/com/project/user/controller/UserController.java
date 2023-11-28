@@ -37,5 +37,4 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(@PathVariable("id") Long id, @RequestBody JsonMergePatch patch) {
         return ResponseEntity.ok(userService.update(id, patch));
     }
-
 }
