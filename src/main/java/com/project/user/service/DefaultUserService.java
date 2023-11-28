@@ -12,7 +12,7 @@ import com.project.user.model.User;
 import com.project.user.model.UserDTO;
 import com.project.user.repository.UserRepository;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
-import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
+import com.project.utils.exceptionhandler.exceptions.ElementNotFoundException;
 import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,7 +42,7 @@ public class DefaultUserService implements UserService {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (currentUser.getRole().equals(Role.ADMIN) || id.equals(currentUser.getId())) {
-            return entityDtoMapper.toUserDTO(userRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND_ID, id))));
+            return entityDtoMapper.toUserDTO(userRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(USER_NOT_FOUND_ID, id))));
         }
 
         throw new AccessDeniedException(FORBIDDEN);
@@ -63,7 +63,7 @@ public class DefaultUserService implements UserService {
 
         User dbUser = userRepository
                 .findById(id)
-                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND_ID, id)));
+                .orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(USER_NOT_FOUND_ID, id)));
 
         ObjectMapper objectMapper = new ObjectMapper();
         UserDTO updatedUser;

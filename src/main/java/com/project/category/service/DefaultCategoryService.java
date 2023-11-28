@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
-import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
+import com.project.utils.exceptionhandler.exceptions.ElementNotFoundException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.category.model.Category;
 import com.project.category.model.CategoryDTO;
@@ -52,14 +52,14 @@ public class DefaultCategoryService implements CategoryService {
     @Override
     public CategoryDTO get(Long id) {
         return entityDtoMapper.toCategoryDTO(categoryRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(CATEGORY_NOT_FOUND_ID, id))
+                .orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(CATEGORY_NOT_FOUND_ID, id))
         ));
     }
 
     @Override
     @Transactional
     public CategoryDTO update(Long id, JsonMergePatch patch) {
-        Category dbCategory = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElemException(
+        Category dbCategory = categoryRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(
                 MessageFormat.format(CATEGORY_NOT_FOUND_ID, id)));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -83,14 +83,14 @@ public class DefaultCategoryService implements CategoryService {
     @Override
     public void delete(Long id) {
         if (!categoryRepository.existsById(id))
-            throw new NoSuchElemException(MessageFormat.format(CATEGORY_NOT_FOUND_ID, id));
+            throw new ElementNotFoundException(MessageFormat.format(CATEGORY_NOT_FOUND_ID, id));
         categoryRepository.deleteById(id);
     }
 
     public Set<Category> getExistedCategories(Set<Category> categories) {
         HashSet<Category> existedCategories = new HashSet<>();
         for (Category cat : categories) {
-            existedCategories.add(categoryRepository.getCategoryByName(cat.getName()).orElseThrow(() -> new NoSuchElemException(
+            existedCategories.add(categoryRepository.getCategoryByName(cat.getName()).orElseThrow(() -> new ElementNotFoundException(
                     MessageFormat.format(CATEGORY_NOT_FOUND_NAME, cat.getName()))));
         }
         return existedCategories;

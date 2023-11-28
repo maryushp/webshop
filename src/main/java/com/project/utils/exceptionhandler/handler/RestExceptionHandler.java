@@ -19,8 +19,8 @@ import static com.project.utils.exceptionhandler.ExceptionMessages.INVALID_ENTIT
 @ControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(NoSuchElemException.class)
-    public ResponseEntity<Problem> handleNoSuchElementException(NoSuchElemException ex) {
+    @ExceptionHandler(ElementNotFoundException.class)
+    public ResponseEntity<Problem> handleElementNotFoundException(ElementNotFoundException ex) {
         Problem problem = Problem.builder().withTitle("Not Found").withStatus(Status.NOT_FOUND).withDetail(ex.getMessage()).build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
     }

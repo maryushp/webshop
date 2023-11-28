@@ -9,7 +9,7 @@ import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.category.service.DefaultCategoryService;
 import com.project.utils.exceptionhandler.exceptions.InvalidImageException;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
-import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
+import com.project.utils.exceptionhandler.exceptions.ElementNotFoundException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import com.project.category.model.Category;
 import com.project.item.model.Item;
@@ -70,7 +70,7 @@ public class DefaultItemService implements ItemService {
     @Override
     public ItemDTO get(Long id) {
         ItemDTO item = entityDtoMapper.toItemDTO(itemRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id))
+                .orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id))
                 ));
 
         item.setImageData((item.getImageData()));
@@ -86,14 +86,14 @@ public class DefaultItemService implements ItemService {
     @Override
     public Page<ItemDTO> getItemsByPartialName(String partialName, Pageable pageable) {
         if (partialName == null || partialName.isEmpty()) {
-            throw new NoSuchElemException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
+            throw new ElementNotFoundException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
         }
 
         Page<Item> items = itemRepository.findByNameContaining(partialName, pageable);
 
 
         if (items.isEmpty()) {
-            throw new NoSuchElemException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
+            throw new ElementNotFoundException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
         }
 
         return items.map(entityDtoMapper::toItemDTO);
@@ -106,7 +106,7 @@ public class DefaultItemService implements ItemService {
             throw new InvalidUpdateRequest(IMAGE_OR_PATCH_MUST_PRESENT);
         }
         Item dbItem =
-                itemRepository.findById(id).orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id)));
+                itemRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id)));
         if (patch != null) {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModules(new JavaTimeModule());
@@ -139,7 +139,7 @@ public class DefaultItemService implements ItemService {
     @Override
     public void delete(Long id) {
         if (!itemRepository.existsById(id))
-            throw new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, id));
+            throw new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id));
         itemRepository.deleteById(id);
     }
 }

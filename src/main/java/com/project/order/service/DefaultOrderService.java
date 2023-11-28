@@ -15,7 +15,7 @@ import com.project.orderitem.repository.OrderItemRepository;
 import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.repository.UserRepository;
-import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
+import com.project.utils.exceptionhandler.exceptions.ElementNotFoundException;
 import com.project.utils.mappers.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -54,7 +54,7 @@ public class DefaultOrderService implements OrderService {
 
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User dbUser = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(USER_NOT_FOUND_ID, currentUser.getId())));
+                .orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(USER_NOT_FOUND_ID, currentUser.getId())));
 
         Order savedOrder = orderRepository.save(
                 Order.builder()
@@ -75,7 +75,7 @@ public class DefaultOrderService implements OrderService {
     @Override
     public OrderDTO get(Long id) {
         return entityDtoMapper.toOrderDTO(orderRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElemException(MessageFormat.format(ORDER_NOT_FOUND, id))
+                .orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(ORDER_NOT_FOUND, id))
                 ));
     }
 
@@ -93,7 +93,7 @@ public class DefaultOrderService implements OrderService {
     @Override
     public void delete(Long id) {
         if (!orderRepository.existsById(id)) {
-            throw new NoSuchElemException(MessageFormat.format(ORDER_NOT_FOUND, id));
+            throw new ElementNotFoundException(MessageFormat.format(ORDER_NOT_FOUND, id));
         }
         orderRepository.deleteById(id);
     }
@@ -105,7 +105,7 @@ public class DefaultOrderService implements OrderService {
             Item item =
                     itemRepository.findById(orderItem.getItem().getId())
                             .orElseThrow(() ->
-                                    new NoSuchElemException(MessageFormat.format(ITEM_NOT_FOUND, orderItem.getItem().getId())));
+                                    new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, orderItem.getItem().getId())));
             orderMap.put(item, orderItem.getAmount());
         }
         return orderMap;
