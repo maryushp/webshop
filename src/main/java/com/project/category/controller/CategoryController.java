@@ -2,7 +2,7 @@ package com.project.category.controller;
 
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.category.model.CategoryDTO;
-import com.project.category.service.DefaultCategoryService;
+import com.project.category.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RequestMapping("/category")
 public class CategoryController {
-    private final DefaultCategoryService categoryService;
+    private final CategoryService categoryService;
 
     @PostMapping
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryDTO categoryDto) {

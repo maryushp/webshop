@@ -2,7 +2,7 @@ package com.project.item.controller;
 
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.item.model.ItemDTO;
-import com.project.item.service.DefaultItemService;
+import com.project.item.service.ItemService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/item")
 @RequiredArgsConstructor
 public class ItemController {
-    private final DefaultItemService itemService;
+    private final ItemService itemService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ItemDTO> createItem(@RequestPart("image") @Nullable MultipartFile image,

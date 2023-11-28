@@ -3,7 +3,7 @@ package com.project.auth.controller;
 import com.project.auth.model.AuthenticationRequest;
 import com.project.auth.model.AuthenticationResponse;
 import com.project.auth.model.RegisterRequest;
-import com.project.auth.service.DefaultAuthenticationService;
+import com.project.auth.service.AuthenticationService;
 import com.project.utils.exceptionhandler.exceptions.InvalidTokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +20,7 @@ import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final DefaultAuthenticationService authService;
+    private final AuthenticationService authService;
     public static final String AUTHORIZATION = "Authorization";
 
     @PostMapping("/register")

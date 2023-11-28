@@ -2,7 +2,7 @@ package com.project.order.controller;
 
 import com.project.order.model.OrderDTO;
 import com.project.order.model.OrderRequest;
-import com.project.order.service.DefaultOrderService;
+import com.project.order.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ import java.net.URI;
 @RequestMapping("/order")
 @RequiredArgsConstructor
 public class OrderController {
-    private final DefaultOrderService orderService;
+    private final OrderService orderService;
 
     @PostMapping
     public ResponseEntity<OrderDTO> createOrder(@RequestBody @Valid OrderRequest orderRequest) {

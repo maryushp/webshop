@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.project.category.service.DefaultCategoryService;
+import com.project.category.service.CategoryService;
 import com.project.utils.exceptionhandler.exceptions.InvalidImageException;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
 import com.project.utils.exceptionhandler.exceptions.ElementNotFoundException;
@@ -36,7 +36,7 @@ import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 @RequiredArgsConstructor
 public class DefaultItemService implements ItemService {
     private final ItemRepository itemRepository;
-    private final DefaultCategoryService categoryService;
+    private final CategoryService categoryService;
     private final EntityDtoMapper entityDtoMapper;
 
     @Override
@@ -49,7 +49,7 @@ public class DefaultItemService implements ItemService {
         }
 
         Set<Category> actualCategories = item.getCategories();
-        item.setCategories(categoryService.getExistedCategories(actualCategories));
+        item.setCategories(categoryService.getExistingCategories(actualCategories));
 
         item.setCreationDate(LocalDateTime.now());
 
@@ -122,7 +122,7 @@ public class DefaultItemService implements ItemService {
             dbItem.setName(updatedItem.getName());
             dbItem.setPrice(updatedItem.getPrice());
             dbItem.setDescription(updatedItem.getDescription());
-            dbItem.setCategories(categoryService.getExistedCategories(updatedItem.getCategories()));
+            dbItem.setCategories(categoryService.getExistingCategories(updatedItem.getCategories()));
             dbItem.setLongDescription(updatedItem.getLongDescription());
         }
         if (image != null) {

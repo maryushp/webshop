@@ -3,7 +3,7 @@ package com.project.auth.service;
 import com.project.auth.model.AuthenticationRequest;
 import com.project.auth.model.AuthenticationResponse;
 import com.project.auth.model.RegisterRequest;
-import com.project.jwt.DefaultJwtService;
+import com.project.jwt.JwtService;
 import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.repository.UserRepository;
@@ -27,7 +27,7 @@ import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 public class DefaultAuthenticationService implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final DefaultJwtService jwtService;
+    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailService;
 

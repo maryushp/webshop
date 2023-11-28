@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.order.model.OrderDTO;
-import com.project.order.service.DefaultOrderService;
+import com.project.order.service.OrderService;
 import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.model.UserDTO;
@@ -30,7 +30,7 @@ import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final EntityDtoMapper entityDtoMapper;
-    private final DefaultOrderService orderService;
+    private final OrderService orderService;
 
     @Override
     public Page<UserDTO> getAll(Pageable pageable) {

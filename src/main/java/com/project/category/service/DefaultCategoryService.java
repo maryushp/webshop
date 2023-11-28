@@ -87,7 +87,8 @@ public class DefaultCategoryService implements CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    public Set<Category> getExistedCategories(Set<Category> categories) {
+    @Override
+    public Set<Category> getExistingCategories(Set<Category> categories) {
         HashSet<Category> existedCategories = new HashSet<>();
         for (Category cat : categories) {
             existedCategories.add(categoryRepository.getCategoryByName(cat.getName()).orElseThrow(() -> new ElementNotFoundException(
