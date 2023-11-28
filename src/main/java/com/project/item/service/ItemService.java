@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.project.category.service.CategoryService;
+import com.project.category.service.DefaultCategoryService;
 import com.project.utils.exceptionhandler.exceptions.InvalidImageException;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
 import com.project.utils.exceptionhandler.exceptions.NoSuchElemException;
@@ -36,7 +36,7 @@ import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 @RequiredArgsConstructor
 public class ItemService implements CrudItemService {
     private final ItemRepository itemRepository;
-    private final CategoryService categoryService;
+    private final DefaultCategoryService categoryService;
     private final EntityDtoMapper entityDtoMapper;
 
     @Override
