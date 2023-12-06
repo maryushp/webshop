@@ -1,4 +1,4 @@
-package com.project.image.service;
+package com.project.image;
 
 import org.springframework.web.multipart.MultipartFile;
 

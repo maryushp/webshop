@@ -1,4 +1,4 @@
-package com.project.image.service;
+package com.project.image;
 
 import com.project.utils.exceptionhandler.exceptions.InvalidImageException;
 import org.springframework.beans.factory.annotation.Value;

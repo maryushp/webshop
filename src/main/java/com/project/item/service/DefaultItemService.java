@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.category.service.CategoryService;
-import com.project.image.service.ImageService;
+import com.project.image.ImageService;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
 import com.project.utils.exceptionhandler.exceptions.ElementNotFoundException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
