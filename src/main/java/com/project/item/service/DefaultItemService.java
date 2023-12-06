@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.project.category.service.CategoryService;
-import com.project.utils.exceptionhandler.exceptions.InvalidImageException;
+import com.project.image.service.ImageService;
 import com.project.utils.exceptionhandler.exceptions.InvalidUpdateRequest;
 import com.project.utils.exceptionhandler.exceptions.ElementNotFoundException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +37,7 @@ public class DefaultItemService implements ItemService {
     private final ItemRepository itemRepository;
     private final CategoryService categoryService;
     private final EntityDtoMapper entityDtoMapper;
+    private final ImageService imageService;
 
     @Override
     @Transactional
@@ -53,13 +53,15 @@ public class DefaultItemService implements ItemService {
 
         item.setCreationDate(LocalDateTime.now());
 
-        try {
-            item.setImageData(image.getBytes());
-        } catch (IOException e) {
-            throw new InvalidImageException(INVALID_IMAGE);
+        Item savedItem = itemRepository.save(item);
+
+        if (image != null) {
+            String imageURI = imageService.uploadImage(image, savedItem.getId().toString());
+            item.setImageData(imageURI);
+            return entityDtoMapper.toItemDTO(itemRepository.save(item));
         }
 
-        return entityDtoMapper.toItemDTO(itemRepository.save(item));
+        return entityDtoMapper.toItemDTO(savedItem);
     }
 
     @Override
@@ -105,8 +107,10 @@ public class DefaultItemService implements ItemService {
         if (patch == null && image == null) {
             throw new InvalidUpdateRequest(IMAGE_OR_PATCH_MUST_PRESENT);
         }
+
         Item dbItem =
                 itemRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id)));
+
         if (patch != null) {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModules(new JavaTimeModule());
@@ -125,12 +129,10 @@ public class DefaultItemService implements ItemService {
             dbItem.setCategories(categoryService.getExistingCategories(updatedItem.getCategories()));
             dbItem.setLongDescription(updatedItem.getLongDescription());
         }
+
         if (image != null) {
-            try {
-                dbItem.setImageData(image.getBytes());
-            } catch (IOException e) {
-                throw new InvalidImageException(INVALID_IMAGE);
-            }
+            String imageURI = imageService.uploadImage(image, dbItem.getId().toString());
+            dbItem.setImageData(imageURI);
         }
 
         return entityDtoMapper.toItemDTO(itemRepository.save(dbItem));
@@ -138,8 +140,14 @@ public class DefaultItemService implements ItemService {
 
     @Override
     public void delete(Long id) {
-        if (!itemRepository.existsById(id))
-            throw new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id));
+        Item item =
+                itemRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id)));
+
+        String imageData = item.getImageData();
+        if (imageData != null) {
+            imageService.deleteImage(imageData);
+        }
+
         itemRepository.deleteById(id);
     }
 }
