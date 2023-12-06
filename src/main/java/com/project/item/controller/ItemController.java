@@ -41,8 +41,8 @@ public class ItemController {
     }
 
     @GetMapping("/search/by-categories")
-    public ResponseEntity<Page<ItemDTO>> getByCategories(@RequestParam List<Long> catIds,
-                                                         @PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<ItemDTO>> getItemsByCategories(@RequestParam List<Long> catIds,
+                                                              @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(itemService.getByCategories(catIds, pageable));
     }
 
@@ -53,9 +53,9 @@ public class ItemController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<ItemDTO> updateCategory(@PathVariable("id") Long id,
-                                                  @RequestPart("patch") @Nullable JsonMergePatch patch,
-                                                  @RequestPart("image") @Nullable MultipartFile image) {
+    public ResponseEntity<ItemDTO> updateItem(@PathVariable("id") Long id,
+                                              @RequestPart("patch") @Nullable JsonMergePatch patch,
+                                              @RequestPart("image") @Nullable MultipartFile image) {
         return ResponseEntity.ok(itemService.update(id, patch, image));
     }
 
