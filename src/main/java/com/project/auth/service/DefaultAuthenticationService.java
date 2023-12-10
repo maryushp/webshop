@@ -47,26 +47,16 @@ public class DefaultAuthenticationService implements AuthenticationService {
         }
 
         userRepository.save(user);
-        var jwtAccessToken = jwtService.generateAccessToken(user);
-        var jwtRefreshToken = jwtService.generateRefreshToken(user);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtAccessToken)
-                .refreshToken(jwtRefreshToken)
-                .id(user.getId())
-                .build();
+
+        return buildAuthenticationResponse(user);
     }
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        var jwtAccessToken = jwtService.generateAccessToken(user);
-        var jwtRefreshToken = jwtService.generateRefreshToken(user);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtAccessToken)
-                .refreshToken(jwtRefreshToken)
-                .id(user.getId())
-                .build();
+
+        return buildAuthenticationResponse(user);
     }
 
     @Override
@@ -80,5 +70,15 @@ public class DefaultAuthenticationService implements AuthenticationService {
             throw new InvalidTokenException(INVALID_REFRESH_TOKEN);
         }
         return jwtService.generateAccessToken(userDetails);
+    }
+
+    private AuthenticationResponse buildAuthenticationResponse(User user) {
+        var jwtAccessToken = jwtService.generateAccessToken(user);
+        var jwtRefreshToken = jwtService.generateRefreshToken(user);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtAccessToken)
+                .refreshToken(jwtRefreshToken)
+                .id(user.getId())
+                .build();
     }
 }

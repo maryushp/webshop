@@ -31,8 +31,8 @@ public class Item {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
     @Lob
-    @Column(name = "image", length = 1000)
-    private byte[] imageData;
+    @Column(name = "image_uri", length = 1000)
+    private String imageData;
     @Column(name="long_description")
     private String longDescription;
     @ManyToMany

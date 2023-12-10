@@ -22,6 +22,7 @@ public final class ExceptionMessages {
     public static final String ITEM_NOT_FOUND = "Item with id = {0} doesn''t exist";
     public static final String ITEM_SHOULD_PRESENT = "Item should present";
     public static final String INVALID_IMAGE = "Uploaded image is invalid";
+    public static final String IMAGE_NOT_EXIST = "Image does not exist";
     public static final String IMAGE_OR_PATCH_MUST_PRESENT = "At least one parameter (image or patch) must present";
     public static final String INVALID_ITEM_UPDATE = "Invalid item update request";
     public static final String USER_EMAIL_SHOULD_BE_LESS_THAN_45_CHARS = "User email should be less than 45 chars";
@@ -46,4 +47,5 @@ public final class ExceptionMessages {
     public static final String INVALID_REFRESH_TOKEN = "Invalid refresh token";
     public static final String FORBIDDEN = "Forbidden";
     public static final String USER_NOT_FOUND = "User not found";
+    public static final String JPG = ".jpg";
 }

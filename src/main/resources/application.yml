@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: ${ACTIVE_PROFILE}
   datasource:
     url: ${DB_URL}
     username: ${SQL_USERNAME}
@@ -11,6 +13,6 @@ spring:
 
 logging:
   level:
-    root: debug
+    root: info
 server:
   port: 8080

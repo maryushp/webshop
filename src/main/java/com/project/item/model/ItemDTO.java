@@ -29,7 +29,7 @@ public class ItemDTO {
     private String description;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
-    private byte[] imageData;
+    private String imageData;
     @NotNull(message = ITEM_DESCRIPTION_SHOULD_PRESENT)
     private String longDescription;
     @NotEmpty(message = ITEM_SHOULD_HAVE_AT_LEAST_1_CATEGORY)

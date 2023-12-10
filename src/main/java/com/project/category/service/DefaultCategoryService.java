@@ -41,7 +41,6 @@ public class DefaultCategoryService implements CategoryService {
                     category.getName()));
 
         return entityDtoMapper.toCategoryDTO(categoryRepository.save(category));
-
     }
 
     @Override
@@ -62,15 +61,7 @@ public class DefaultCategoryService implements CategoryService {
         Category dbCategory = categoryRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(
                 MessageFormat.format(CATEGORY_NOT_FOUND_ID, id)));
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        Category updatedCategory;
-        try {
-            JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbCategory, JsonNode.class));
-            updatedCategory = objectMapper.treeToValue(updatedJson, Category.class);
-        } catch(JsonPatchException | JsonProcessingException e) {
-            throw new InvalidUpdateRequest(INVALID_CATEGORY_UPDATE);
-        }
+        Category updatedCategory = getUpdatedCategory(patch, dbCategory);
 
         if (categoryRepository.getCategoryByName(updatedCategory.getName()).isPresent())
             throw new SuchElementAlreadyExists(MessageFormat.format(CATEGORY_ALREADY_EXISTS, updatedCategory.getName()));
@@ -78,6 +69,19 @@ public class DefaultCategoryService implements CategoryService {
         dbCategory.setName(updatedCategory.getName());
 
         return entityDtoMapper.toCategoryDTO(categoryRepository.save(dbCategory));
+    }
+
+    private Category getUpdatedCategory(JsonMergePatch patch, Category actualCategory) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Category updatedCategory;
+        try {
+            JsonNode updatedJson = patch.apply(objectMapper.convertValue(actualCategory, JsonNode.class));
+            updatedCategory = objectMapper.treeToValue(updatedJson, Category.class);
+        } catch(JsonPatchException | JsonProcessingException e) {
+            throw new InvalidUpdateRequest(INVALID_CATEGORY_UPDATE);
+        }
+        return updatedCategory;
     }
 
     @Override
