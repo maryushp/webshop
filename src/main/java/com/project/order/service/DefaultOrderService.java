@@ -49,8 +49,7 @@ public class DefaultOrderService implements OrderService {
 
         Set<OrderItem> orderItemSet = orderItems.stream().map(entityDtoMapper::toOrderItem).collect(Collectors.toSet());
 
-        Map<Item, Integer> orderMap = makeOrderMap(orderItemSet);
-        LocalDateTime dateNow = LocalDateTime.now();
+        Map<Item, Integer> orderMap = createOrderMap(orderItemSet);
 
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User dbUser = userRepository.findById(currentUser.getId())
@@ -60,10 +59,12 @@ public class DefaultOrderService implements OrderService {
                 Order.builder()
                         .user(dbUser)
                         .cost(countOrderCost(orderMap))
-                        .creationDate(dateNow)
+                        .creationDate(LocalDateTime.now())
                         .build());
+
         Set<OrderItem> savedOrderItems = createOrderItemSet(orderMap, savedOrder);
         savedOrder.setOrderItems(savedOrderItems);
+
         return entityDtoMapper.toOrderDTO(savedOrder);
     }
 
@@ -98,7 +99,7 @@ public class DefaultOrderService implements OrderService {
         orderRepository.deleteById(id);
     }
 
-    private Map<Item, Integer> makeOrderMap(Set<OrderItem> orderItems) {
+    private Map<Item, Integer> createOrderMap(Set<OrderItem> orderItems) {
         Map<Item, Integer> orderMap = new HashMap<>();
 
         for (OrderItem orderItem: orderItems) {

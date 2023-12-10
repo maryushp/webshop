@@ -6,7 +6,7 @@ ___
 
 Webshop is a simple online web shop implemented as a RESTful API using Spring Boot.
 The application provides two roles: User and Admin. Users can perform operations such as creating orders, searching 
-for items buy categories or names, and viewing their order history. Admins, on the other hand, have additional 
+for items by categories or names, and viewing their order history. Admins, on the other hand, have additional 
 privileges for managing items, categories, and viewing all orders.
 
 ___

@@ -65,18 +65,26 @@ public class DefaultUserService implements UserService {
                 .findById(id)
                 .orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(USER_NOT_FOUND_ID, id)));
 
+        UserDTO updatedUser = getUpdatedUser(patch, dbUser);
+        updateFields(dbUser, updatedUser);
+
+        return entityDtoMapper.toUserDTO(userRepository.save(dbUser));
+    }
+
+    private void updateFields(User dbUser, UserDTO updatedUser) {
+        dbUser.setName(updatedUser.getName());
+        dbUser.setSurname(updatedUser.getSurname());
+    }
+
+    private UserDTO getUpdatedUser(JsonMergePatch patch, User actualUser) {
         ObjectMapper objectMapper = new ObjectMapper();
         UserDTO updatedUser;
         try {
-            JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbUser, JsonNode.class));
+            JsonNode updatedJson = patch.apply(objectMapper.convertValue(actualUser, JsonNode.class));
             updatedUser = objectMapper.treeToValue(updatedJson, UserDTO.class);
         } catch (JsonProcessingException | JsonPatchException e) {
             throw new InvalidUpdateRequest(INVALID_USER_UPDATE);
         }
-
-        dbUser.setName(updatedUser.getName());
-        dbUser.setSurname(updatedUser.getSurname());
-
-        return entityDtoMapper.toUserDTO(userRepository.save(dbUser));
+        return updatedUser;
     }
 }

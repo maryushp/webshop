@@ -71,18 +71,14 @@ public class DefaultItemService implements ItemService {
 
     @Override
     public ItemDTO get(Long id) {
-        ItemDTO item = entityDtoMapper.toItemDTO(itemRepository.findById(id)
+        return entityDtoMapper.toItemDTO(itemRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id))
                 ));
-
-        item.setImageData((item.getImageData()));
-        return item;
     }
 
     @Override
     public Page<ItemDTO> getByCategories(List<Long> catIds, Pageable pageable) {
-        Page<Item> itemsByCategories = itemRepository.findByCategoriesIdIn(catIds, pageable);
-        return itemsByCategories.map(entityDtoMapper::toItemDTO);
+        return itemRepository.findByCategoriesIdIn(catIds, pageable).map(entityDtoMapper::toItemDTO);
     }
 
     @Override
@@ -112,22 +108,8 @@ public class DefaultItemService implements ItemService {
                 itemRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id)));
 
         if (patch != null) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModules(new JavaTimeModule());
-
-            Item updatedItem;
-            try {
-                JsonNode updatedJson = patch.apply(objectMapper.convertValue(dbItem, JsonNode.class));
-                updatedItem = objectMapper.treeToValue(updatedJson, Item.class);
-            } catch (JsonPatchException | JsonProcessingException e) {
-                throw new InvalidUpdateRequest(INVALID_ITEM_UPDATE);
-            }
-
-            dbItem.setName(updatedItem.getName());
-            dbItem.setPrice(updatedItem.getPrice());
-            dbItem.setDescription(updatedItem.getDescription());
-            dbItem.setCategories(categoryService.getExistingCategories(updatedItem.getCategories()));
-            dbItem.setLongDescription(updatedItem.getLongDescription());
+            Item updatedItem = getUpdatedItem(patch, dbItem);
+            updateFields(dbItem, updatedItem);
         }
 
         if (image != null) {
@@ -149,5 +131,27 @@ public class DefaultItemService implements ItemService {
         }
 
         itemRepository.deleteById(id);
+    }
+
+    private void updateFields(Item dbItem, Item updatedItem) {
+        dbItem.setName(updatedItem.getName());
+        dbItem.setPrice(updatedItem.getPrice());
+        dbItem.setDescription(updatedItem.getDescription());
+        dbItem.setCategories(categoryService.getExistingCategories(updatedItem.getCategories()));
+        dbItem.setLongDescription(updatedItem.getLongDescription());
+    }
+
+    private Item getUpdatedItem(JsonMergePatch patch, Item actualItem) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModules(new JavaTimeModule());
+
+        Item updatedItem;
+        try {
+            JsonNode updatedJson = patch.apply(objectMapper.convertValue(actualItem, JsonNode.class));
+            updatedItem = objectMapper.treeToValue(updatedJson, Item.class);
+        } catch (JsonPatchException | JsonProcessingException e) {
+            throw new InvalidUpdateRequest(INVALID_ITEM_UPDATE);
+        }
+        return updatedItem;
     }
 }
