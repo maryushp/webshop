@@ -2,6 +2,7 @@ package com.project.image;
 
 import com.project.utils.exceptionhandler.exceptions.InvalidImageException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 import static com.project.utils.exceptionhandler.ExceptionMessages.*;
 
 @Service
+@Profile("local")
 public class LocalStorageImageService implements ImageService {
     @Value("${image.storage.path}")
     private String imageStoragePath;
