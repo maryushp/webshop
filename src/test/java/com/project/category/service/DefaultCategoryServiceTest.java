@@ -58,12 +58,7 @@ class DefaultCategoryServiceTest {
         categoryToUpdateDto = new CategoryDTO();
         categoryToUpdateDto.setName("categoryUPDATE");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            patch = JsonMergePatch.fromJson(objectMapper.convertValue(categoryToUpdate, JsonNode.class));
-        } catch (JsonPatchException e) {
-            throw new RuntimeException(e);
-        }
+        patch = createPatch(categoryToUpdate);
     }
 
     @Test
@@ -130,13 +125,7 @@ class DefaultCategoryServiceTest {
     void updateInvalidPatch() {
         when(categoryRepository.findById(any())).thenReturn(Optional.of(category));
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonMergePatch invalidPatch;
-        try {
-            invalidPatch = JsonMergePatch.fromJson(objectMapper.convertValue(1, JsonNode.class));
-        } catch (JsonPatchException e) {
-            throw new RuntimeException(e);
-        }
+        JsonMergePatch invalidPatch = createPatch(1);
 
         assertThrows(InvalidUpdateRequest.class, () -> defaultCategoryService.update(1L, invalidPatch));
     }
@@ -184,5 +173,14 @@ class DefaultCategoryServiceTest {
         Set<Category> categories = Set.of(category);
 
         assertEquals(Set.of(category), defaultCategoryService.getExistingCategories(categories));
+    }
+
+    private static JsonMergePatch createPatch(Object object) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return JsonMergePatch.fromJson(objectMapper.convertValue(object, JsonNode.class));
+        } catch (JsonPatchException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
