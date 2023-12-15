@@ -3,7 +3,7 @@ package com.project.auth.service;
 import com.project.auth.model.AuthenticationRequest;
 import com.project.auth.model.AuthenticationResponse;
 import com.project.auth.model.RegisterRequest;
-import com.project.jwt.JwtService;
+import com.project.jwt.service.JwtService;
 import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.repository.UserRepository;
