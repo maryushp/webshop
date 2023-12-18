@@ -89,7 +89,6 @@ public class DefaultItemService implements ItemService {
 
         Page<Item> items = itemRepository.findByNameContaining(partialName, pageable);
 
-
         if (items.isEmpty()) {
             throw new ElementNotFoundException(MessageFormat.format(ITEM_BY_PART_NOT_FOUND, partialName));
         }
@@ -125,12 +124,14 @@ public class DefaultItemService implements ItemService {
         Item item =
                 itemRepository.findById(id).orElseThrow(() -> new ElementNotFoundException(MessageFormat.format(ITEM_NOT_FOUND, id)));
 
-        String imageData = item.getImageData();
+        deleteImage(item.getImageData());
+        itemRepository.deleteById(id);
+    }
+
+    private void deleteImage(String imageData) {
         if (imageData != null) {
             imageService.deleteImage(imageData);
         }
-
-        itemRepository.deleteById(id);
     }
 
     private void updateFields(Item dbItem, Item updatedItem) {
