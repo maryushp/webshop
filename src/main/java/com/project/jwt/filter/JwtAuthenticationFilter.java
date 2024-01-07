@@ -1,5 +1,6 @@
-package com.project.jwt;
+package com.project.jwt.filter;
 
+import com.project.jwt.service.DefaultJwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

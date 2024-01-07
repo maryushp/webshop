@@ -3,10 +3,11 @@ package com.project.auth.service;
 import com.project.auth.model.AuthenticationRequest;
 import com.project.auth.model.AuthenticationResponse;
 import com.project.auth.model.RegisterRequest;
-import com.project.jwt.JwtService;
+import com.project.jwt.service.JwtService;
 import com.project.user.model.Role;
 import com.project.user.model.User;
 import com.project.user.repository.UserRepository;
+import com.project.utils.exceptionhandler.exceptions.ElementNotFoundException;
 import com.project.utils.exceptionhandler.exceptions.InvalidTokenException;
 import com.project.utils.exceptionhandler.exceptions.SuchElementAlreadyExists;
 import lombok.RequiredArgsConstructor;
@@ -53,8 +54,10 @@ public class DefaultAuthenticationService implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
+                request.getPassword()));
+        User user =
+                userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ElementNotFoundException(USER_NOT_FOUND));
 
         return buildAuthenticationResponse(user);
     }
@@ -65,7 +68,7 @@ public class DefaultAuthenticationService implements AuthenticationService {
         if (userEmail == null) {
             throw new InvalidTokenException(INVALID_USERNAME);
         }
-        UserDetails userDetails = this.userDetailService.loadUserByUsername(userEmail);
+        UserDetails userDetails = userDetailService.loadUserByUsername(userEmail);
         if (!jwtService.isTokenValid(jwt, userDetails)) {
             throw new InvalidTokenException(INVALID_REFRESH_TOKEN);
         }
